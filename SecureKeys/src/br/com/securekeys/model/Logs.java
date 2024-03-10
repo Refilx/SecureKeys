@@ -1,4 +1,4 @@
-package classes;
+package br.com.securekeys.model;
 
 import java.time.LocalDateTime;
 

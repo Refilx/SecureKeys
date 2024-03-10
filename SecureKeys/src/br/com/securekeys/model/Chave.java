@@ -1,8 +1,8 @@
-package classes;
+package br.com.securekeys.model;
 
 public class Chave{
 
-    private int numeroChave;
+    private int numeroChave; //Primary Key
     private String sala;
     private int quantChave;
     private String status;
