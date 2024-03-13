@@ -1,19 +1,26 @@
 package br.com.securekeys.model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Usuario extends Pessoa{
 
+    private int IdUser;
     private String username;
     private String password;
     private String role;
-    private LocalDateTime DtRegistro;
+    private Date DtRegistro;
 
     public Usuario(){}
 
     public void registrarChave(){
+    }
 
+    public void setIdUser(int idUser) {
+        IdUser = idUser;
+    }
 
+    public int getIdUser() {
+        return IdUser;
     }
 
     public void setUsername(String username) {
@@ -41,12 +48,12 @@ public class Usuario extends Pessoa{
     }
 
     @Override
-    public void setDtRegistro(LocalDateTime dtRegistro) {
+    public void setDtRegistro(Date dtRegistro) {
         DtRegistro = dtRegistro;
     }
 
     @Override
-    public LocalDateTime getDtRegistro() {
+    public Date getDtRegistro() {
         return DtRegistro;
     }
 }

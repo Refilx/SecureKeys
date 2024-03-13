@@ -1,9 +1,10 @@
 package br.com.securekeys.model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Pessoa {
 
+    private int idPessoa;
     private String nome;
     private String cpf;
     private String email;
@@ -13,9 +14,17 @@ public class Pessoa {
     private String cargo;
     private String cidade;
     private String cep;
-    private LocalDateTime dtRegistro;
+    private Date dtRegistro;
 
     public Pessoa() {}
+
+    public void setIdPessoa(int id){
+        idPessoa = id;
+    }
+
+    public int getIdPessoa(){
+        return idPessoa;
+    }
 
     public void setNome(String nome) {
         this.nome = nome;
@@ -89,11 +98,11 @@ public class Pessoa {
         return cep;
     }
 
-    public void setDtRegistro(LocalDateTime dtRegistro) {
+    public void setDtRegistro(Date dtRegistro) {
         this.dtRegistro = dtRegistro;
     }
 
-    public LocalDateTime getDtRegistro() {
+    public Date getDtRegistro() {
         return dtRegistro;
     }
 }

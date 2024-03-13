@@ -1,11 +1,12 @@
 package br.com.securekeys.model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Logs{
 
     private int IdUser;
-    private LocalDateTime DtLog;
+    private String username;
+    private Date DtLog;
 
     public Logs() {}
 
@@ -17,16 +18,20 @@ public class Logs{
         return IdUser;
     }
 
+    public void setUsername(String nome) {
+        this.username = nome;
+    }
+
     // Pega o nome de um usuário existente da Classe Usuario
     public void getUsername(Usuario usuario) {
         usuario.getUsername();
     }
 
-    public void setDtLog(LocalDateTime dtLog) {
+    public void setDtLog(Date dtLog) {
         DtLog = dtLog;
     }
 
-    public LocalDateTime getDtLog() {
+    public Date getDtLog() {
         return DtLog;
     }
 }
