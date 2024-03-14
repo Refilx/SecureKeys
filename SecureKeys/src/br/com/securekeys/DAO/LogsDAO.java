@@ -17,7 +17,7 @@ public class LogsDAO {
      */
     public void save(Logs logs) {
 
-        String sql = "INSERT INTO logs(idUser, DtLog) VALUES (?, ?)";
+        String sql = "INSERT INTO logs(idUser, dtLogs) VALUES (?, ?)";
 
         Connection conn = null;
 
@@ -92,7 +92,7 @@ public class LogsDAO {
                 logs.setUsername(rset.getString("username"));
 
                 //Recupera a data do logs
-                logs.setDtLog(rset.getDate("DtLogs"));
+                logs.setDtLog(rset.getDate("dtLogs"));
 
                 //Adiciona a logs com todos os dados registrados à lista de chaves
                 listaLogs.add(logs);

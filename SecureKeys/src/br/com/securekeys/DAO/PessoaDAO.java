@@ -125,7 +125,7 @@ public class PessoaDAO {
                 pessoa.setCep(rset.getString("cep"));
 
                 //Recupera o data de registro da Pessoa
-                pessoa.setDtRegistro(rset.getDate("DtRegistro"));
+                pessoa.setDtRegistro(rset.getDate("dtRegistro"));
 
                 //Adiciona a Pessoa com todos os dados registrados à lista de Pessoas
                 listaPessoa.add(pessoa);
@@ -161,7 +161,7 @@ public class PessoaDAO {
     public void update(Pessoa pessoa){
 
         String sql = "UPDATE pessoa SET nome = ?, cpf = ?, email = ?, telefone = ?, endereco = ?, empresa = ?, cargo = ?, cidade = ?, cep = ?, DtRegistro = ?"+
-                "WHERE cpf = ?";
+                "WHERE idPessoa = ?";
 
         Connection conn = null;
 
@@ -187,7 +187,7 @@ public class PessoaDAO {
             pstm.setDate(10, new Date(pessoa.getDtRegistro().getTime()));
 
             //Qual o ID do registro que deseja atualizar? passando o id de pessoa para atualizar o registro
-            pstm.setInt(4, pessoa.getIdPessoa());
+            pstm.setInt(11, pessoa.getIdPessoa());
 
             //Executa a Query
             pstm.execute();

@@ -1,42 +1,77 @@
 package br.com.securekeys.aplicacao;
 
 import br.com.securekeys.DAO.ChaveDAO;
+import br.com.securekeys.DAO.PessoaDAO;
 import br.com.securekeys.model.Chave;
+import br.com.securekeys.model.Pessoa;
+
+import java.util.Date;
 
 public class Main {
 
     public static void main(String[] args) {
-        ChaveDAO chaveDAO = new ChaveDAO();
 
-        Chave c1 = new Chave();
+        /**
+         * Teste da tabela chaves e das funcionalidades da classe ChaveDAO
 
-        c1.setSala("LAB 124");
-        c1.setQuantChave(2);
-        c1.setStatus("Disponivel");
+//        ChaveDAO chaveDAO = new ChaveDAO();
+
+//        Chave c1 = new Chave();
+
+//        c1.setSala("LAB 124");
+//        c1.setQuantChave(2);
+//        c1.setStatus("Disponivel");
 
 //        chaveDAO.save(c1);
 
-        Chave c2 = new Chave();
+//        Chave c2 = new Chave();
 
-        c2.setSala("LAB 118");
-        c2.setQuantChave(1);
-        c2.setStatus("Disponivel");
+//        c2.setSala("LAB 118");
+//        c2.setQuantChave(1);
+//        c2.setStatus("Disponivel");
 
         //ID da chave que será atualizada
-        c2.setNumeroChave(3);
+//        c2.setNumeroChave(1);
 
 //        chaveDAO.update(c2);
 
-        chaveDAO.deleteByID(4);
+//        chaveDAO.deleteByID(2);
 
 
-        for(Chave c : chaveDAO.getChave()){
-            System.out.println("Numero da chave: "+c.getNumeroChave()
-                                +"\nSala: "+c.getSala()
-                                +"\nQuantidade: "+c.getQuantChave()
-                                +"\nStatus: "+c.getStatus()+"\n \n");
-        }
+//        for(Chave c : chaveDAO.getChave()){
+//            System.out.println("Numero da chave: "+c.getNumeroChave()
+//                                +"\nSala: "+c.getSala()
+//                                +"\nQuantidade: "+c.getQuantChave()
+//                                +"\nStatus: "+c.getStatus()+"\n");
+//        }
 
+        */
 
+        /**
+         * Teste da tabela pessoa e das funcionalidades da classe PessoaDAO
+         */
+
+        PessoaDAO pessoaDAO = new PessoaDAO();
+
+        Pessoa p1 = new Pessoa();
+
+        p1.setNome("Adimael");
+        p1.setCpf("000.000.000-00");
+        p1.setEmail("a@teste.com.br");
+        p1.setTelefone("(00)0000-0000");
+        p1.setEndereco("bairro x, rua c, número n");
+        p1.setEmpresa("Empresa z");
+        p1.setCargo("DEV Front End");
+        p1.setCidade("Cidade");
+        p1.setCep("00000000");
+        p1.setDtRegistro(new Date());
+
+//        pessoaDAO.save(p1);
+
+//        pessoaDAO.deleteByID(3);
+
+        p1.setIdPessoa(1);
+
+        pessoaDAO.update(p1);
     }
 }
