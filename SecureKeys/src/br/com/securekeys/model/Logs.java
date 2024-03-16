@@ -19,12 +19,12 @@ public class Logs{
     }
 
     public void setUsername(String nome) {
-        this.username = nome;
+        username = nome;
     }
 
-    // Pega o nome de um usuário existente da Classe Usuario
-    public void getUsername(Usuario usuario) {
-        usuario.getUsername();
+    // Possívelmente haverá futuras alterações
+    public String getUsername() {
+        return username;
     }
 
     public void setDtLog(Date dtLog) {
