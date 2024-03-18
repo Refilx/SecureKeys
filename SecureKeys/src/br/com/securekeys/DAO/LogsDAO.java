@@ -233,7 +233,8 @@ public class LogsDAO {
      */
     public boolean verifyPass(String user, String pass){
 
-        String sql = "SELECT username, password FROM usuario";
+        String sql = "SELECT password FROM usuario" +
+                     "WHERE username = ?";
 
         Boolean resultadoValidacao = false;
 
@@ -251,18 +252,20 @@ public class LogsDAO {
             //Criamos uma PreparedStatement para executar uma query
             pstm = conn.prepareStatement(sql);
 
+            pstm.setString(1, user);
+
             rset = pstm.executeQuery();
 
-            while(rset.next()){
+//            while(rset.next()){
 
                 //Criamos um usuário
                 Usuario usuario = new Usuario();
 
-                //Armazenamos o username do usuário que está logando para verificar se ele está cadastrados no banco de daods
-                usuario.setUsername(rset.getString("username"));
+//                //Armazenamos o username do usuário que está logando para verificar se ele está cadastrados no banco de daods
+//                usuario.setUsername(rset.getString("username"));
 
-                //Se o nome do usuário existir no banco de dados passaremos a verificar se a senha está correta
-                if(user.equals(usuario.getUsername())){
+//                //Se o nome do usuário existir no banco de dados passaremos a verificar se a senha está correta
+//                if(user.equals(usuario.getUsername())){
 
                     //Neste ponto pegamos a senha do respectivo usuário cadatrado no banco de dados
                     usuario.setPassword(rset.getString("password"));
@@ -287,10 +290,10 @@ public class LogsDAO {
                         logsDAO.save(logs);
 
                         resultadoValidacao = true;
-                        break;
+//                        break;
                     }
-                }
-            }
+//                }
+//            }
         }catch(Exception e){
             e.printStackTrace();
         }finally {
