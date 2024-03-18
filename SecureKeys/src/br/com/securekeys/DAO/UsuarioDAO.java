@@ -2,6 +2,7 @@ package br.com.securekeys.DAO;
 
 import br.com.securekeys.factory.ConnectionFactory;
 import br.com.securekeys.model.Usuario;
+import org.jasypt.util.password.BasicPasswordEncryptor;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -30,9 +31,15 @@ public class UsuarioDAO {
             //Criamos uma PreparedStatement para executar uma Query
             pstm = conn.prepareStatement(sql);
 
+            //Iniciamos a classe que fará a criptografia da senha do usuário antes de salva-la no banco
+            BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+
+            //Neste ponto chamamos a função que criptografa a senha e passamos no parametro a senha armazenada no usuário
+            String senhaCriptografada = passwordEncryptor.encryptPassword(usuario.getPassword());
+
             //Adicionar valores que são esperados pela Query
             pstm.setString(1, usuario.getUsername());
-            pstm.setString(2, usuario.getPassword());
+            pstm.setString(2, senhaCriptografada);
             pstm.setString(3, usuario.getRole());
             pstm.setDate(4, new Date(usuario.getDtRegistro().getTime()));
 
@@ -129,5 +136,63 @@ public class UsuarioDAO {
 
         return listaUsuario;
     }
+
+    /**
+     * O método executa o SELECT no banco de dados
+     * @param usuario
+     */
+    public void update(Usuario usuario){
+
+        String sql = "UPDATE usuario SET username = ?, password = ?, role = ?, dtRegistro = ?" +
+                     "WHERE idUser = ?";
+
+        Connection conn = null;
+
+        PreparedStatement pstm = null;
+
+        try{
+            //Cria uma conexão com o banco de dados
+            conn = ConnectionFactory.createConnectionToMySQL();
+
+            //Criamos uma PreparedStatement para executar uma Query
+            pstm = conn.prepareStatement(sql);
+
+            //Iniciamos a classe que fará a criptografia da senha do usuário antes de salva-la no banco
+            BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+
+            //Neste ponto chamamos a função que criptografa a senha e passamos no parametro a senha armazenada no usuário
+            String senhaCriptografada = passwordEncryptor.encryptPassword(usuario.getPassword());
+
+            //Passando os valores esperados pela Query
+            pstm.setString(1, usuario.getUsername());
+            pstm.setString(2, senhaCriptografada);
+            pstm.setString(3, usuario.getRole());
+            pstm.setDate(4, new Date(usuario.getDtRegistro().getTime()));
+
+            // Passando o id da linha que será atualizada
+            pstm.setInt(5, usuario.getIdUser());
+
+            //Executando a query
+            pstm.execute();
+
+        }catch(Exception e) {
+            e.printStackTrace();
+        }finally {
+            try{
+                //Fechando as conexões abertas
+                if(pstm!=null){
+                    pstm.close();
+                }
+
+                if(conn!=null){
+                    conn.close();
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 }

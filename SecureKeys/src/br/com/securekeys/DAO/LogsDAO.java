@@ -10,6 +10,7 @@ import java.util.List;
 import br.com.securekeys.factory.ConnectionFactory;
 import br.com.securekeys.model.Logs;
 import br.com.securekeys.model.Usuario;
+import org.jasypt.util.password.BasicPasswordEncryptor;
 
 public class LogsDAO {
 
@@ -236,7 +237,7 @@ public class LogsDAO {
         String sql = "SELECT password FROM usuario" +
                      "WHERE username = ?";
 
-        Boolean resultadoValidacao = false;
+        boolean resultadoValidacao = false;
 
         Connection conn = null;
 
@@ -261,6 +262,9 @@ public class LogsDAO {
                 //Criamos um usuário
                 Usuario usuario = new Usuario();
 
+                //Inicializamos o encriptador
+                BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+
 //                //Armazenamos o username do usuário que está logando para verificar se ele está cadastrados no banco de daods
 //                usuario.setUsername(rset.getString("username"));
 
@@ -272,12 +276,12 @@ public class LogsDAO {
 
                     /**
                      Verificamos se a senha digitada pelo usuário na tela de login (que será passada como parâmetro do método)
-                     e comparamos com a senha do usuário guardada no banco de dados
+                     utilizando a classe de criptografia de dados para comparar com  senha criptografada do usuário guardada no banco de dados
 
                      se a senha estiver correta, validamos o login
                      e armazenamos o usuário que fez login pegando o id do respectivo usuário
                      */
-                    if(pass.equals(usuario.getPassword())){
+                    if(passwordEncryptor.checkPassword(pass, usuario.getPassword())){
                         //Armazenamos o id do respectivo usuário
                         usuario.setIdUser(rset.getInt("idUser"));
 
