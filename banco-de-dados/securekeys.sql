@@ -9,10 +9,20 @@ create table chaves(
     status varchar(30)
 );
 
-create table logs(
+create table usuario(
 	idUser integer auto_increment not null primary key,
-    username varchar(120),
-    dtLogs date not null
+    username varchar(120) not null,
+    password varchar(240) not null,
+    role varchar(30) not null,
+    dtRegistro date not null
+);
+
+create table logs(
+	idLogs integer auto_increment not null primary key,
+	idUser integer not null,
+    dtLogs date not null,
+    
+    FOREIGN KEY idUser(idUser) REFERENCES usuario(idUser)
 );
 
 create table pessoa(
@@ -29,3 +39,14 @@ create table pessoa(
     dtRegistro date not null
 );
 
+create table historico(
+	idHistorico integer auto_increment not null primary key,
+    nome varchar(240) not null,
+    numeroChave integer not null,
+    observacoes varchar(500),
+    status varchar(30),
+    dataAbertura date,
+    dataFechamento date,
+    
+    foreign key numeroChave(numeroChave) references chaves(numeroChave)
+);

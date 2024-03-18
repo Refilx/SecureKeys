@@ -215,4 +215,14 @@ public class ChaveDAO {
         }
     }
 
+    /**
+     * emprestar a chave:
+     *
+     * update chaves set quantchave = quantchave - 1 where numerochave = tal
+     *
+     *
+     * devolver chave:
+     *
+     * update chaves set quantchave = quantchave + 1 where numerochave = tal
+     */
 }

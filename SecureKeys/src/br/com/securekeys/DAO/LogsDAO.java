@@ -15,12 +15,10 @@ public class LogsDAO {
 
     /**
      * O método executa o INSERT no banco de dados
-     *
-     * verificar se o código está correto
      */
     public void save(Logs logs) {
 
-        String sql = "INSERT INTO logs(idUser, username, dtLogs) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO logs(idUser, dtLogs) VALUES (?, ?)";
 
         Connection conn = null;
 
@@ -35,8 +33,7 @@ public class LogsDAO {
 
             //Adicionar os valores que são esperados pela Query
             pstm.setInt(1, logs.getIdUser());
-            pstm.setString(2, logs.getUsername());
-            pstm.setDate(3, new Date(logs.getDtLog().getTime()));
+            pstm.setDate(2, new Date(logs.getDtLog().getTime()));
 
             //Executa a Query
             pstm.execute();
@@ -62,11 +59,12 @@ public class LogsDAO {
 
     //O método executa o READ no banco de dados
     public List<Logs> getLogs() {
-//        String sql = "SELECT L.*, U.username FROM logs L"+
-//                     "JOIN usuario U ON(L.idUser = U.idUser)"; //Verificar se vai dar certo
+        String sql = "SELECT L.*, U.username FROM logs L"+
+                     "JOIN usuario U ON(L.idUser = U.idUser)"; //Verificar se vai dar certo
 
-        String sql = "SELECT * FROM logs";
+//        String sql = "SELECT * FROM logs";
 
+        //Lista que armazenará os dados de logs
         List<Logs> listaLogs = new ArrayList<Logs>();
 
         Connection conn = null;
@@ -89,10 +87,13 @@ public class LogsDAO {
             while(rset.next()){
                 Logs logs = new Logs();
 
-                //Recupera o id da logs
+                //Recupera o idLogs da logs
+                logs.setIdLogs(rset.getInt("idLogs"));
+
+                //Recupera o idUser da logs
                 logs.setIdUser(rset.getInt("idUser"));
 
-                //Recupera o id da logs
+                //Recupera o username da consulta
                 logs.setUsername(rset.getString("username"));
 
                 //Recupera a data do logs
@@ -132,14 +133,14 @@ public class LogsDAO {
     public void update(Logs logs){
 
 //        String sql = "UPDATE logs SET idUser = ?, DtLogs = ?"+
-//                "WHERE idUser = ?";
+//                "WHERE idLogs = ?";
 
 
 //        String sql = "UPDATE logs SET idUser = ?, username = ?, DtLogs = ?"+
-//                "WHERE idUser = ?";
+//                "WHERE idLogs = ?";
 
-        String sql = "UPDATE logs SET idUser = ?, username = ?"+
-                     "WHERE idUser = ?";
+        String sql = "UPDATE logs SET idUser = ?"+
+                     "WHERE idLogs = ?";
 
         Connection conn = null;
 
@@ -154,11 +155,10 @@ public class LogsDAO {
 
             //Adicina os valores para atualizar
             pstm.setInt(1,logs.getIdUser());
-            pstm.setString(2, logs.getUsername());
 //            pstm.setDate(, new Date(logs.getDtLog().getTime()));
 
             //Qual o ID do registro que deseja atualizar?
-            pstm.setInt(3, logs.getIdUser());
+            pstm.setInt(2, logs.getIdLogs());
 
             //Executa a Query
             pstm.execute();
@@ -185,9 +185,9 @@ public class LogsDAO {
     /**
      *  O método executa o comando DELETE no banco de dados
      */
-    public void deleteByID(int idUser){
+    public void deleteByID(int idLogs){
 
-        String sql = "DELETE FROM logs WHERE idUser = ?";
+        String sql = "DELETE FROM logs WHERE idLogs = ?";
 
         Connection conn = null;
 
@@ -201,7 +201,7 @@ public class LogsDAO {
             pstm = conn.prepareStatement(sql);
 
             //Passando o id do registro que será excluído
-            pstm.setInt(1, idUser);
+            pstm.setInt(1, idLogs);
 
             //Executa a Query
             pstm.execute();
@@ -227,12 +227,13 @@ public class LogsDAO {
 
     /**
      * O método abaixo valida a senha que será passada pelo usuário ao tentar fazer login
+     * @param user
      * @param pass
      * @return
      */
-    public boolean verifyPass(String pass){
+    public boolean verifyPass(String user, String pass){
 
-        String sql = "SELECT password FROM usuario";
+        String sql = "SELECT username, password FROM usuario";
 
         Boolean resultadoValidacao = false;
 
@@ -257,19 +258,37 @@ public class LogsDAO {
                 //Criamos um usuário
                 Usuario usuario = new Usuario();
 
-                //Neste ponto pegamos a senha de algum usuário do banco de dados e armazenamos no usuário recém criado
-                usuario.setPassword(rset.getString("password"));
+                //Armazenamos o username do usuário que está logando para verificar se ele está cadastrados no banco de daods
+                usuario.setUsername(rset.getString("username"));
 
-                /**
+                //Se o nome do usuário existir no banco de dados passaremos a verificar se a senha está correta
+                if(user.equals(usuario.getUsername())){
+
+                    //Neste ponto pegamos a senha do respectivo usuário cadatrado no banco de dados
+                    usuario.setPassword(rset.getString("password"));
+
+                    /**
                      Verificamos se a senha digitada pelo usuário na tela de login (que será passada como parâmetro do método)
-                     e comparamos com a senha de um usuário guardada no banco de dados
+                     e comparamos com a senha do usuário guardada no banco de dados
 
                      se a senha estiver correta, validamos o login
-                     e armazenamos o usuário que fez login pegando o nome do usuário digitado na tela de login
-                 */
-                if(pass.equals(usuario.getPassword())){
-                    resultadoValidacao = true;
-                    break;
+                     e armazenamos o usuário que fez login pegando o id do respectivo usuário
+                     */
+                    if(pass.equals(usuario.getPassword())){
+                        //Armazenamos o id do respectivo usuário
+                        usuario.setIdUser(rset.getInt("idUser"));
+
+                        //Criamos neste ponto as classes que irão armazenar os dados do usuário que está acessando
+                        LogsDAO logsDAO = new LogsDAO();
+                        Logs logs = new Logs();
+
+                        //Armazenamos o idUser que está logando no objeto log e salvamos no banco de dados
+                        logs.setIdUser(usuario.getIdUser());
+                        logsDAO.save(logs);
+
+                        resultadoValidacao = true;
+                        break;
+                    }
                 }
             }
         }catch(Exception e){
@@ -294,7 +313,6 @@ public class LogsDAO {
                 e.printStackTrace();
             }
         }
-
         return resultadoValidacao;
     }
 

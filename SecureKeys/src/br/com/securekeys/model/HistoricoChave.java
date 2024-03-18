@@ -1,15 +1,16 @@
 package br.com.securekeys.model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class HistoricoChave {
 
+    private int idHistorico;
     private String nome;
     private int numeroChave;
     private String observacoes;
     private String status;
-    private LocalDateTime dataAbertura;
-    private LocalDateTime dataFechamento;
+    private Date dataAbertura;
+    private Date dataFechamento;
 
     public HistoricoChave() {}
 
@@ -20,6 +21,14 @@ public class HistoricoChave {
         else{
             return false;
         }
+    }
+
+    public int getIdHistorico() {
+        return idHistorico;
+    }
+
+    public void setIdHistorico(int id) {
+      idHistorico = id;
     }
 
     public void setNome(String nome) {
@@ -54,19 +63,19 @@ public class HistoricoChave {
         return status;
     }
 
-    public void setDataAbertura(LocalDateTime dataAbertura) {
+    public void setDataAbertura(Date dataAbertura) {
         this.dataAbertura = dataAbertura;
     }
 
-    public LocalDateTime getDataAbertura() {
+    public Date getDataAbertura() {
         return dataAbertura;
     }
 
-    public void setDataFechamento(LocalDateTime dataFechamento) {
+    public void setDataFechamento(Date dataFechamento) {
         this.dataFechamento = dataFechamento;
     }
 
-    public LocalDateTime getDataFechamento() {
+    public Date getDataFechamento() {
         return dataFechamento;
     }
 }
