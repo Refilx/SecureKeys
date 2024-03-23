@@ -2,7 +2,9 @@ package br.com.securekeys.DAO;
 
 import br.com.securekeys.model.Chave;
 import br.com.securekeys.factory.ConnectionFactory;
+import br.com.securekeys.model.Historico;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -216,13 +218,330 @@ public class ChaveDAO {
     }
 
     /**
-     * emprestar a chave:
      *
-     * update chaves set quantchave = quantchave - 1 where numerochave = tal
-     *
-     *
-     * devolver chave:
-     *
-     * update chaves set quantchave = quantchave + 1 where numerochave = tal
+     * @param numeroChave
      */
+    public void updateStatusChave(int numeroChave){
+
+        String sql = "SELECT * FROM chaves"+
+                     "WHERE numeroChave = ?";
+
+        Connection conn = null;
+
+        PreparedStatement pstm = null;
+
+        ResultSet rset = null;
+
+        try{
+            //Cria a conexão com o banco de dados
+            conn = ConnectionFactory.createConnectionToMySQL();
+
+            //Criamos uma PreparedStatement para executar uma query
+            pstm = conn.prepareStatement(sql);
+
+            //
+            pstm.setInt(1, numeroChave);
+
+            //O ResultSet executa a Query
+            rset = pstm.executeQuery();
+
+            //Recupera a quantidade de uma chave específica no banco de dados
+            int quantChave = rset.getInt("quantChave");
+
+            Connection connUpdate = null;
+
+            PreparedStatement pstmUpdate = null;
+
+            //
+            if(quantChave==0){
+
+                String setIndisponivel = "UPDATE chaves SET status = 'INDISPONÍVEL'"+
+                                         "WHERE numeroChave = ?";
+
+                try{
+                    //Cria a conexão com o banco de dados
+                    connUpdate = ConnectionFactory.createConnectionToMySQL();
+
+                    //Criamos uma PreparedStatement para executar uma query
+                    pstmUpdate = conn.prepareStatement(setIndisponivel);
+
+                    //
+                    pstmUpdate.setInt(1, numeroChave);
+
+                    //
+                    pstmUpdate.execute();
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }finally{
+                    try{
+
+                        //Fechar as conexões que foram abertas
+                        if(pstm!=null){
+                            pstmUpdate.close();
+                        }
+
+                        if(conn!=null) {
+                            connUpdate.close();
+                        }
+
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            else {
+
+                String setDisponivel = "UPDATE chaves SET status = 'DISPONÍVEL'"+
+                                       "WHERE numeroChave = ?";
+
+                try{
+                    //Cria a conexão com o banco de dados
+                    connUpdate = ConnectionFactory.createConnectionToMySQL();
+
+                    //Criamos uma PreparedStatement para executar uma query
+                    pstmUpdate = conn.prepareStatement(setDisponivel);
+
+                    //
+                    pstmUpdate.setInt(1, numeroChave);
+
+                    //
+                    pstmUpdate.execute();
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }finally{
+                    try{
+
+                        //Fechar as conexões que foram abertas
+                        if(pstm!=null){
+                            pstmUpdate.close();
+                        }
+
+                        if(conn!=null) {
+                            connUpdate.close();
+                        }
+
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            try{
+
+                //Fechar as conexões que foram abertas
+                if(rset!=null){
+                    rset.close();
+                }
+
+                if(pstm!=null){
+                    pstm.close();
+                }
+
+                if(conn!=null) {
+                    conn.close();
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Método de verify do status da chave
+     */
+    public boolean verifyStatusChave(int numeroChave){
+
+        String sql = "SELECT status FROM chaves"+
+                     "WHERE numeroChave = ?";
+
+        boolean resultadoVerify = false;
+
+        Connection conn = null;
+
+        PreparedStatement pstm = null;
+
+        ResultSet rset = null;
+
+        try{
+            //Cria a conexão com o banco de dados
+            conn = ConnectionFactory.createConnectionToMySQL();
+
+            //Criamos uma PreparedStatement para executar uma query
+            pstm = conn.prepareStatement(sql);
+
+            //
+            pstm.setInt(1, numeroChave);
+
+            //
+            rset = pstm.executeQuery();
+
+            //
+            Chave chave = new Chave();
+
+            //Variável que armazenará o valor do status da chave armazenada no  banco de dados
+            chave.setStatus(rset.getString("status"));
+
+            //Variável que armazenará a quantidade de chaves que estarão na portaria no momento em que for realizado o emprestimo
+            chave.setQuantChave(rset.getInt("quantChave"));
+
+            //Se o status da chave for disponível, o resultado recebe um valor true
+            if(chave.getQuantChave()>0 && chave.getStatus().equalsIgnoreCase("DISPONÍVEL")){
+                resultadoVerify = true;
+            }
+            else if(chave.getQuantChave()==0){
+                //
+                ChaveDAO chaveDAO = new ChaveDAO();
+
+                //
+                chaveDAO.updateStatusChave(numeroChave);
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            try{
+
+                //Fechar as conexões que foram abertas
+                if(rset!=null){
+                    rset.close();
+                }
+
+                if(pstm!=null){
+                    pstm.close();
+                }
+
+                if(conn!=null) {
+                    conn.close();
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return resultadoVerify;
+    }
+
+    /**
+     * Método para emprestar a chave
+     *
+     * verificar a classe de parâmetro para salvar o emprestimo no histórico
+     */
+    public void emprestarChave(Historico historico){
+
+        //
+        if(verifyStatusChave(historico.getNumeroChave())==true){
+
+            String sql = "UPDATE chaves SET quantChave = quantChave - 1"+
+                         "WHERE numeroChave = ?";
+
+            HistoricoDAO historicoDAO = new HistoricoDAO();
+
+            Connection conn = null;
+
+            PreparedStatement pstm = null;
+
+            try{
+                //Cria a conexão com o banco de dados
+                conn = ConnectionFactory.createConnectionToMySQL();
+
+                //Criamos uma PreparedStatement para executar uma query
+                pstm = conn.prepareStatement(sql);
+
+                //
+                pstm.setInt(1, historico.getNumeroChave());
+
+                //Executa a Query
+                pstm.execute();
+
+                //Após executar a query que realiza o empréstimo da chave, salvamos a transação no histórico
+                historicoDAO.save(historico);
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }finally{
+                try{
+
+                    //Fechar as conexões que foram abertas
+                    if(pstm!=null){
+                        pstm.close();
+                    }
+
+                    if(conn!=null) {
+                        conn.close();
+                    }
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        else{
+
+            //Mensagem de erro ao tentar emprestar a chave, estando ela indisponível
+            JOptionPane.showMessageDialog(null, "Você não pode emprestar esta chave, pois ela está INDISPONÍVEL!",
+                                     "ERRO AO EMPRESTAR CHAVE!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Verificar usabilidade desse método de devolução e do método de updateDataFechamento do HistoricoDAO
+     * @param historico
+     */
+    public void devolverChave(Historico historico){
+
+        String sqlUpdate = "UPDATE chaves SET quantChave = quantChave + 1"+
+                           "WHERE numeroChave = ?";
+
+        Connection connUpdate = null;
+
+        PreparedStatement pstmUpdate = null;
+
+        try{
+            //
+            connUpdate = ConnectionFactory.createConnectionToMySQL();
+
+            //
+            pstmUpdate = connUpdate.prepareStatement(sqlUpdate);
+
+            //
+            pstmUpdate.setInt(1, historico.getNumeroChave());
+
+            //
+            boolean result = pstmUpdate.execute();
+
+            if(result == true){
+                //
+                HistoricoDAO historicoDAO = new HistoricoDAO();
+
+                historicoDAO.updateDataFechamento(historico);
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            try {
+                //
+                if(pstmUpdate!=null){
+                    pstmUpdate.close();
+                }
+
+                if(connUpdate!=null){
+                    connUpdate.close();
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+
+    }
 }

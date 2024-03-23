@@ -2,7 +2,7 @@ package br.com.securekeys.model;
 
 import java.util.Date;
 
-public class HistoricoChave {
+public class Historico {
 
     private int idHistorico;
     private String nome;
@@ -12,8 +12,9 @@ public class HistoricoChave {
     private Date dataAbertura;
     private Date dataFechamento;
 
-    public HistoricoChave() {}
+    public Historico() {}
 
+    //Retirar método
     public boolean verifyChave(int quantChave){
         if(quantChave > 0){
             return true;
