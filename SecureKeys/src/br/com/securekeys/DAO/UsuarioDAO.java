@@ -18,7 +18,7 @@ public class UsuarioDAO {
      */
     public void save(Usuario usuario){
 
-        String sql = "INSERT INTO usuarios(username, password, role, dtRegistro) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO usuario(username, password, role, dtRegistro) VALUES (?, ?, ?, ?)";
 
         Connection conn = null;
 
@@ -138,7 +138,7 @@ public class UsuarioDAO {
     }
 
     /**
-     * O método executa o SELECT no banco de dados
+     * O método executa o UPDATE no banco de dados
      * @param usuario
      */
     public void update(Usuario usuario){
@@ -194,5 +194,47 @@ public class UsuarioDAO {
         }
     }
 
+    /**
+     * O método executa o UPDATE no banco de dados
+     * @param idUser
+     */
+    public void deleteByID(int idUser){
+
+        String sql = "DELETE FROM usuario WHERE idUser = ?";
+
+        Connection conn = null;
+
+        PreparedStatement pstm = null;
+
+        try{
+            //Cria uma conexão com o banco de dados
+            conn = ConnectionFactory.createConnectionToMySQL();
+
+            //Criamos uma PreparedStatement para executar uma Query
+            pstm = conn.prepareStatement(sql);
+
+            //Passando o id do usuario que será excluído
+            pstm.setInt(1, idUser);
+
+            //Executa a Query
+            pstm.execute();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            try{
+                //Fechar as conexões que foram abertas
+                if(pstm!=null){
+                    pstm.close();
+                }
+
+                if(conn!=null){
+                    conn.close();
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
 
 }

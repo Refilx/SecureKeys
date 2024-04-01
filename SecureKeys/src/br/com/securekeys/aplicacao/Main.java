@@ -1,10 +1,15 @@
 package br.com.securekeys.aplicacao;
 
 import br.com.securekeys.DAO.ChaveDAO;
+import br.com.securekeys.DAO.LogsDAO;
 import br.com.securekeys.DAO.PessoaDAO;
+import br.com.securekeys.DAO.UsuarioDAO;
 import br.com.securekeys.model.Chave;
 import br.com.securekeys.model.Pessoa;
+import br.com.securekeys.model.Usuario;
+import br.com.securekeys.views.LoginScreen;
 import org.jasypt.util.password.BasicPasswordEncryptor;
+import org.jasypt.util.password.PasswordEncryptor;
 
 import javax.security.auth.kerberos.EncryptionKey;
 import java.util.Date;
@@ -79,24 +84,57 @@ public class Main {
 
 
 
-        String s1 = "1234";
+//        String s1 = "1234";
+//
+//        String s2 = "abcd";
+//
+//        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+//
+//        String senhaCriptografada = passwordEncryptor.encryptPassword(s1);
+//
+//        boolean resultado = passwordEncryptor.checkPassword(s1, senhaCriptografada);
+//
+//        System.out.println("Senha sem criptografar: "+s1);
+//        System.out.println("Senha criptografada: "+senhaCriptografada);
+//
+//        senhaCriptografada = passwordEncryptor.encryptPassword(s1);
+//
+//        System.out.println("Senha criptografada: "+senhaCriptografada);
+//        System.out.println("Resultado da comparação: "+resultado);
 
-        String s2 = "abcd";
 
-        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+        Usuario usuario = new Usuario();
 
-        String senhaCriptografada = passwordEncryptor.encryptPassword(s1);
+        usuario.setUsername("admin");
+        usuario.setPassword("admin");
+        usuario.setRole("ADMIN");
+        usuario.setDtRegistro(new Date());
 
-        boolean resultado = passwordEncryptor.checkPassword(s1, senhaCriptografada);
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
 
-        System.out.println("Senha sem criptografar: "+s1);
-        System.out.println("Senha criptografada: "+senhaCriptografada);
+//        usuarioDAO.save(usuario);
 
-        senhaCriptografada = passwordEncryptor.encryptPassword(s1);
+//        usuarioDAO.deleteByID(3);
+//
+//        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+//
+//        String pass = "admin";
 
-        System.out.println("Senha criptografada: "+senhaCriptografada);
-        System.out.println("Resultado da comparação: "+resultado);
+//        for(Usuario u : usuarioDAO.getUsuario()){
+//            System.out.println("idUser: "+u.getIdUser()
+//                                +"\nUsuario: "+u.getUsername()
+//                                +"\nPass: "+u.getPassword()
+//                                +"\nROLE: "+u.getRole()
+//                                +"\nDATA REGISTRO: "+u.getDtRegistro()
+//            +"\nA senha é igual(admin): "+passwordEncryptor.checkPassword(pass, u.getPassword())+"\n");
+//        }
 
+        LogsDAO logsDAO = new LogsDAO();
 
+        String user = "admin";
+
+        String pass = "admin";
+
+        System.out.println("resultado: "+logsDAO.verifyPass(user, pass));
     }
 }

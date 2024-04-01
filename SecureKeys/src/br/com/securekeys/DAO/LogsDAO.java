@@ -234,8 +234,7 @@ public class LogsDAO {
      */
     public boolean verifyPass(String user, String pass){
 
-        String sql = "SELECT password FROM usuario" +
-                     "WHERE username = ?";
+        String sql = "SELECT idUser, password FROM usuario WHERE username = ?";
 
         boolean resultadoValidacao = false;
 
@@ -253,11 +252,12 @@ public class LogsDAO {
             //Criamos uma PreparedStatement para executar uma query
             pstm = conn.prepareStatement(sql);
 
+            //Atribui a query o username que será buscado no banco
             pstm.setString(1, user);
 
             rset = pstm.executeQuery();
 
-//            while(rset.next()){
+            while(rset.next()){
 
                 //Criamos um usuário
                 Usuario usuario = new Usuario();
@@ -265,10 +265,10 @@ public class LogsDAO {
                 //Inicializamos o encriptador
                 BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
 
-//                //Armazenamos o username do usuário que está logando para verificar se ele está cadastrados no banco de daods
+                //Armazenamos o username do usuário que está logando para verificar se ele está cadastrados no banco de daods
 //                usuario.setUsername(rset.getString("username"));
 
-//                //Se o nome do usuário existir no banco de dados passaremos a verificar se a senha está correta
+                //Se o nome do usuário existir no banco de dados passaremos a verificar se a senha está correta
 //                if(user.equals(usuario.getUsername())){
 
                     //Neste ponto pegamos a senha do respectivo usuário cadatrado no banco de dados
@@ -289,15 +289,17 @@ public class LogsDAO {
                         LogsDAO logsDAO = new LogsDAO();
                         Logs logs = new Logs();
 
-                        //Armazenamos o idUser que está logando no objeto log e salvamos no banco de dados
+                        //Armazenamos o idUser e a data do log no objeto log e salvamos no banco de dados
                         logs.setIdUser(usuario.getIdUser());
+                        logs.setDtLog(new java.util.Date());
+
                         logsDAO.save(logs);
 
                         resultadoValidacao = true;
 //                        break;
                     }
 //                }
-//            }
+            }
         }catch(Exception e){
             e.printStackTrace();
         }finally {
