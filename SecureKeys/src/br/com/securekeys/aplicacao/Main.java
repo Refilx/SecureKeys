@@ -1,12 +1,7 @@
 package br.com.securekeys.aplicacao;
 
-import br.com.securekeys.DAO.ChaveDAO;
-import br.com.securekeys.DAO.LogsDAO;
-import br.com.securekeys.DAO.PessoaDAO;
-import br.com.securekeys.DAO.UsuarioDAO;
-import br.com.securekeys.model.Chave;
-import br.com.securekeys.model.Pessoa;
-import br.com.securekeys.model.Usuario;
+import br.com.securekeys.DAO.*;
+import br.com.securekeys.model.*;
 import br.com.securekeys.views.LoginScreen;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.jasypt.util.password.PasswordEncryptor;
@@ -21,11 +16,12 @@ public class Main {
         /**
          * Teste da tabela chaves e das funcionalidades da classe ChaveDAO
 
+
 //        ChaveDAO chaveDAO = new ChaveDAO();
-
+//
 //        Chave c1 = new Chave();
-
-//        c1.setSala("LAB 124");
+//
+//        c1.setSala("LAB 118");
 //        c1.setQuantChave(2);
 //        c1.setStatus("Disponivel");
 
@@ -52,14 +48,15 @@ public class Main {
 //                                +"\nStatus: "+c.getStatus()+"\n");
 //        }
 
-        */
-
-        /**
-         * Teste da tabela pessoa e das funcionalidades da classe PessoaDAO
          */
 
-//        PessoaDAO pessoaDAO = new PessoaDAO();
-//
+
+        /**
+         * Teste da tabela Pessoa e das funcionalidades da classe PessoaDAO
+
+
+        PessoaDAO pessoaDAO = new PessoaDAO();
+
 //        Pessoa p1 = new Pessoa();
 //
 //        p1.setNome("Adimael");
@@ -73,13 +70,160 @@ public class Main {
 //        p1.setCep("00000000");
 //        p1.setDtRegistro(new Date());
 
+//        //Teste do SAVE
 //        pessoaDAO.save(p1);
-
-//        pessoaDAO.deleteByID(3);
-
+//
+//        //Teste do DELETE
+//        pessoaDAO.deleteByID(2);
+//
+          //Teste do UPDATE
 //        p1.setIdPessoa(1);
-
+//
 //        pessoaDAO.update(p1);
+//
+//        //Teste do READ
+//        for(Pessoa p : pessoaDAO.getPessoa()){
+//            System.out.println("ID: "+p.getIdPessoa()+
+//                    "\nNome: "+p.getNome()+
+//                    "\nCPF: "+p.getCpf()+
+//                    "\nEmail: "+p.getEmail()+
+//                    "\nTelefone: "+p.getTelefone()+
+//                    "\nEndereço: "+p.getEndereco()+
+//                    "\nEmpresa: "+p.getEmpresa()+
+//                    "\nCargo: "+p.getCargo()+
+//                    "\nCidade: "+p.getCidade()+
+//                    "\nCEP: "+p.getCep()+
+//                    "\nData de Registro: "+p.getDtRegistro()+"\n");
+//        }
+
+        */
+
+        /**
+         * Teste da tabela Usuário e das funcionalidades da classe UsuárioDAO
+
+
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+
+        Usuario usuario = new Usuario();
+
+        usuario.setUsername("Geovanna");
+        usuario.setPassword("GeoPM");
+        usuario.setRole("ADMINISTRADOR");
+        usuario.setDtRegistro(new Date());
+
+        //Teste do SAVE
+        usuarioDAO.save(usuario);
+
+        //Teste do DELETE
+        usuarioDAO.deleteByID(3);
+
+        //Teste do UPDATE
+        usuario.setIdUser(4);
+        usuarioDAO.update(usuario);
+
+        //Teste do READ
+        for(Usuario u : usuarioDAO.getUsuario()){
+            System.out.println("idUser: "+u.getIdUser()
+                                +"\nUsuario: "+u.getUsername()
+                                +"\nPass: "+u.getPassword()
+                                +"\nROLE: "+u.getRole()
+                                +"\nDATA REGISTRO: "+u.getDtRegistro()+"\n");
+        }
+
+         */
+
+
+        /**
+         * Teste da tabela Logs e das funcionalidades da classe LogsDAO
+
+
+        LogsDAO logsDAO = new LogsDAO();
+
+        Logs logs = new Logs();
+
+        logs.setIdUser(2);
+        logs.setDtLog(new Date());
+
+        //Teste da SAVE
+//        logsDAO.save(logs);
+
+        //Teste do DELETE
+//        logsDAO.deleteByID(1);
+
+        //Teste do UPDATE
+//        logs.setIdLogs(3);
+//        logsDAO.update(logs);
+
+        //Teste do READ
+//        for(Logs l : logsDAO.getLogs()){
+//            System.out.println("idLogs: "+l.getIdLogs()+
+//            "\nidUser: "+l.getIdUser()+
+//                    "\nUsername: "+l.getUsername()+
+//                    "\nData de Log: "+l.getDtLog()+"\n");
+//        }
+
+        */
+
+
+        /**
+         * Teste da tabela Histórico e das funcionalidades da classe HistoricoDAO
+
+
+//        HistoricoDAO historicoDAO = new HistoricoDAO();
+//
+//        Historico historico = new Historico();
+//
+//        historico.setNome("Adimael");
+//        historico.setNumeroChave(2);
+//        historico.setObservacoes("O Estagiário pegou a chave do laboratório 118");
+//        historico.setStatus("Em Aberto");
+//        historico.setDataAbertura(new Date());
+
+        //Teste do SAVE
+//        historicoDAO.save(historico);
+
+        //Teste do DELETE
+//        historicoDAO.deleteByID(2);
+
+        //Teste do UPDATE
+//        historico.setIdHistorico(4);
+//        historicoDAO.update(historico);
+
+        //Teste do UPDATE DATA FECHAMENTO
+//        historico.setDataFechamento(new Date());
+//        historico.setIdHistorico(3);
+//        historicoDAO.updateDataFechamento(historico);
+
+        //Teste do READ
+//        for(Historico h : historicoDAO.getHistorico()){
+//            System.out.println("idHistórico: "+h.getIdHistorico()+
+//                                "\nNome: "+h.getNome()+
+//                                "\nNúmero da Chave: "+h.getNumeroChave()+
+//                                "\nObservações: "+h.getObservacoes()+
+//                                "\nStatus: "+h.getStatus()+
+//                                "\nData de Abertura: "+h.getDataAbertura()+
+//                                "\nData de Fechamento: "+h.getDataFechamento()+"\n");
+//        }
+
+
+         */
+
+        ChaveDAO chaveDAO = new ChaveDAO();
+
+        Historico historico = new Historico();
+
+        historico.setNome("Geovanna");
+        historico.setNumeroChave(2);
+        historico.setObservacoes("A PM pegou a chave do laboratório 118");
+        historico.setStatus("Em Aberto");
+        historico.setDataAbertura(new Date());
+
+
+//        chaveDAO.emprestarChave(historico);
+
+        historico.setIdHistorico(4);
+        chaveDAO.devolverChave(historico);
+
 
 
 
@@ -103,38 +247,13 @@ public class Main {
 //        System.out.println("Resultado da comparação: "+resultado);
 
 
-        Usuario usuario = new Usuario();
 
-        usuario.setUsername("admin");
-        usuario.setPassword("admin");
-        usuario.setRole("ADMIN");
-        usuario.setDtRegistro(new Date());
-
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
-
-//        usuarioDAO.save(usuario);
-
-//        usuarioDAO.deleteByID(3);
+//        LogsDAO logsDAO = new LogsDAO();
 //
-//        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+//        String user = "admin";
 //
 //        String pass = "admin";
-
-//        for(Usuario u : usuarioDAO.getUsuario()){
-//            System.out.println("idUser: "+u.getIdUser()
-//                                +"\nUsuario: "+u.getUsername()
-//                                +"\nPass: "+u.getPassword()
-//                                +"\nROLE: "+u.getRole()
-//                                +"\nDATA REGISTRO: "+u.getDtRegistro()
-//            +"\nA senha é igual(admin): "+passwordEncryptor.checkPassword(pass, u.getPassword())+"\n");
-//        }
-
-        LogsDAO logsDAO = new LogsDAO();
-
-        String user = "admin";
-
-        String pass = "admin";
-
-        System.out.println("resultado: "+logsDAO.verifyPass(user, pass));
+//
+//        System.out.println("resultado: "+logsDAO.verifyPass(user, pass));
     }
 }

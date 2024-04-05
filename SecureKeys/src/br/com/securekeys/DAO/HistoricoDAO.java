@@ -119,8 +119,7 @@ public class HistoricoDAO {
      */
     public void updateDataFechamento(Historico historico){
 
-        String sql = "UPDATE historico SET dataFechamento = ?"+
-                     "WHERE idHistorico = ?";
+        String sql = "UPDATE historico SET dataFechamento = ? WHERE idHistorico = ?";
 
         Connection conn = null;
 

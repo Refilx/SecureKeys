@@ -130,8 +130,7 @@ public class ChaveDAO {
      */
     public void update(Chave chave){
 
-        String sql = "UPDATE chaves SET sala = ?, quantChave = ?, status = ?"+
-                     "WHERE numeroChave = ?";
+        String sql = "UPDATE chaves SET sala = ?, quantChave = ?, status = ? WHERE numeroChave = ?";
 
         Connection conn = null;
 
@@ -223,8 +222,7 @@ public class ChaveDAO {
      */
     public void updateStatusChave(int numeroChave){
 
-        String sql = "SELECT * FROM chaves"+
-                     "WHERE numeroChave = ?";
+        String sql = "SELECT * FROM chaves WHERE numeroChave = ?";
 
         Connection conn = null;
 
@@ -245,6 +243,9 @@ public class ChaveDAO {
             //O ResultSet executa a Query
             rset = pstm.executeQuery();
 
+            //Posiciona o cursor do Result Set no primeira linha de resultado
+            rset.next();
+
             //Recupera a quantidade de uma chave específica no banco de dados
             int quantChave = rset.getInt("quantChave");
 
@@ -255,8 +256,7 @@ public class ChaveDAO {
             //
             if(quantChave==0){
 
-                String setIndisponivel = "UPDATE chaves SET status = 'INDISPONÍVEL'"+
-                                         "WHERE numeroChave = ?";
+                String setIndisponivel = "UPDATE chaves SET status = 'INDISPONÍVEL' WHERE numeroChave = ?";
 
                 try{
                     //Cria a conexão com o banco de dados
@@ -293,8 +293,7 @@ public class ChaveDAO {
 
             else {
 
-                String setDisponivel = "UPDATE chaves SET status = 'DISPONÍVEL'"+
-                                       "WHERE numeroChave = ?";
+                String setDisponivel = "UPDATE chaves SET status = 'DISPONÍVEL' WHERE numeroChave = ?";
 
                 try{
                     //Cria a conexão com o banco de dados
@@ -358,8 +357,7 @@ public class ChaveDAO {
      */
     public boolean verifyStatusChave(int numeroChave){
 
-        String sql = "SELECT status FROM chaves"+
-                     "WHERE numeroChave = ?";
+        String sql = "SELECT status, quantChave FROM chaves WHERE numeroChave = ?";
 
         boolean resultadoVerify = false;
 
@@ -383,25 +381,28 @@ public class ChaveDAO {
             rset = pstm.executeQuery();
 
             //
-            Chave chave = new Chave();
-
-            //Variável que armazenará o valor do status da chave armazenada no  banco de dados
-            chave.setStatus(rset.getString("status"));
-
-            //Variável que armazenará a quantidade de chaves que estarão na portaria no momento em que for realizado o emprestimo
-            chave.setQuantChave(rset.getInt("quantChave"));
-
-            //Se o status da chave for disponível, o resultado recebe um valor true
-            if(chave.getQuantChave()>0 && chave.getStatus().equalsIgnoreCase("DISPONÍVEL")){
-                resultadoVerify = true;
-            }
-            else if(chave.getQuantChave()==0){
-                //
-                ChaveDAO chaveDAO = new ChaveDAO();
+            rset.next();
 
                 //
-                chaveDAO.updateStatusChave(numeroChave);
-            }
+                Chave chave = new Chave();
+
+                //Variável que armazenará o valor do status da chave armazenada no  banco de dados
+                chave.setStatus(rset.getString("status"));
+
+                //Variável que armazenará a quantidade de chaves que estarão na portaria no momento em que for realizado o emprestimo
+                chave.setQuantChave(rset.getInt("quantChave"));
+
+                //Se o status da chave for disponível, o resultado recebe um valor true
+                if (chave.getQuantChave() > 0 && chave.getStatus().equalsIgnoreCase("DISPONIVEL")) {
+                    resultadoVerify = true;
+                } else if (chave.getQuantChave() == 0) {
+                    //
+                    ChaveDAO chaveDAO = new ChaveDAO();
+
+                    //
+                    chaveDAO.updateStatusChave(numeroChave);
+                }
+
 
         }catch(Exception e){
             e.printStackTrace();
@@ -437,10 +438,9 @@ public class ChaveDAO {
     public void emprestarChave(Historico historico){
 
         //
-        if(verifyStatusChave(historico.getNumeroChave())==true){
+        if(verifyStatusChave(historico.getNumeroChave())){
 
-            String sql = "UPDATE chaves SET quantChave = quantChave - 1"+
-                         "WHERE numeroChave = ?";
+            String sql = "UPDATE chaves SET quantChave = quantChave - 1 WHERE numeroChave = ?";
 
             HistoricoDAO historicoDAO = new HistoricoDAO();
 
@@ -497,8 +497,7 @@ public class ChaveDAO {
      */
     public void devolverChave(Historico historico){
 
-        String sqlUpdate = "UPDATE chaves SET quantChave = quantChave + 1"+
-                           "WHERE numeroChave = ?";
+        String sqlUpdate = "UPDATE chaves SET quantChave = quantChave + 1, status = 'DISPONIVEL' WHERE numeroChave = ?";
 
         Connection connUpdate = null;
 
@@ -517,11 +516,15 @@ public class ChaveDAO {
             //
             boolean result = pstmUpdate.execute();
 
-            if(result == true){
+            //Se result realizar um UPDATE o retorno é false, logo precisamos testar se o retorno é falso para salvar o histórico
+            if(!result){
                 //
                 HistoricoDAO historicoDAO = new HistoricoDAO();
 
                 historicoDAO.updateDataFechamento(historico);
+            }
+            else{
+                System.out.println("Não deu update no histórico");
             }
 
         }catch(Exception e){

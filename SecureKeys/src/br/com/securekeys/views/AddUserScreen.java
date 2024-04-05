@@ -108,7 +108,7 @@ public class AddUserScreen extends javax.swing.JInternalFrame {
         });
 
         btnCadastrar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnCadastrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
+        btnCadastrar.setIcon(new javax.swing.ImageIcon(getClass().getClassLoader().getResource("br/com/securekeys/icons/save.png"))); // NOI18N
         btnCadastrar.setText("Cadastrar");
         btnCadastrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
