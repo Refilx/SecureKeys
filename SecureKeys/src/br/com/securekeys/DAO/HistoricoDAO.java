@@ -18,7 +18,7 @@ public class HistoricoDAO {
      */
     public void save(Historico historico){
 
-        String sql = "INSERT INTO historico(nome, numeroChave, observacoes, status, dataAbertura) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO historico(nome, idChave, observacoes, status, dataAbertura) VALUES (?, ?, ?, ?, ?)";
 
         Connection conn = null;
 
@@ -33,7 +33,7 @@ public class HistoricoDAO {
 
             //
             pstm.setString(1, historico.getNome());
-            pstm.setInt(2, historico.getNumeroChave());
+            pstm.setInt(2, historico.getIdChave());
             pstm.setString(3, historico.getObservacoes());
             pstm.setString(4, historico.getStatus());
             pstm.setDate(5, new Date(historico.getDataAbertura().getTime()));
@@ -67,8 +67,8 @@ public class HistoricoDAO {
      */
     public void update(Historico historico){
 
-        String sql = "UPDATE historico SET nome = ?, numeroChave = ?, observacoes = ?, status = ?"+
-                     "WHERE idHistorico = ?";
+        String sql = "UPDATE historico SET nome = ?, idChave = ?, observacoes = ?, status = ?"+
+                "WHERE idHistorico = ?";
 
         Connection conn = null;
 
@@ -83,7 +83,7 @@ public class HistoricoDAO {
 
             //
             pstm.setString(1, historico.getNome());
-            pstm.setInt(2, historico.getNumeroChave());
+            pstm.setInt(2, historico.getIdChave());
             pstm.setString(3, historico.getObservacoes());
             pstm.setString(4, historico.getStatus());
 
@@ -200,7 +200,7 @@ public class HistoricoDAO {
                 historico.setNome(rset.getString("nome"));
 
                 //
-                historico.setNumeroChave(rset.getInt("numeroChave"));
+                historico.setIdChave(rset.getInt("idChave"));
 
                 //
                 historico.setObservacoes(rset.getString("observacoes"));

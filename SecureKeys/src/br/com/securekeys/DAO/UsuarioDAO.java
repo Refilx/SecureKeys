@@ -237,4 +237,72 @@ public class UsuarioDAO {
         }
     }
 
+    /**
+     *  O método verifica se existe um username no banco de dados identico ao informado no parâmetro
+     * @param username
+     * @return
+     */
+    public boolean verifyUsername(String username) {
+
+        String sql = "SELECT username FROM usuario";
+
+        //
+        boolean resultadoVerify = true;
+
+        Connection conn = null;
+
+        //
+        PreparedStatement pstm = null;
+
+        //
+        ResultSet rset = null;
+
+        try{
+            //
+            conn = ConnectionFactory.createConnectionToMySQL();
+
+            //
+            pstm = conn.prepareStatement(sql);
+
+            //
+            rset = pstm.executeQuery();
+
+            //
+            while (rset.next()){
+                //
+                String userDoBanco = rset.getString("username");
+
+                //
+                if(username.equalsIgnoreCase(userDoBanco)){
+                    resultadoVerify = false;
+                    break;
+                }
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            try {
+                //
+                if(rset!=null){
+                    rset.close();
+                }
+
+                if(pstm!=null){
+                    pstm.close();
+                }
+
+                if(conn!=null){
+                    conn.close();
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return resultadoVerify;
+    }
+
+
 }

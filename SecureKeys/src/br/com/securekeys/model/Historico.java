@@ -6,7 +6,7 @@ public class Historico {
 
     private int idHistorico;
     private String nome;
-    private int numeroChave;
+    private int idChave;
     private String observacoes;
     private String status;
     private Date dataAbertura;
@@ -29,7 +29,7 @@ public class Historico {
     }
 
     public void setIdHistorico(int id) {
-      idHistorico = id;
+        idHistorico = id;
     }
 
     public void setNome(String nome) {
@@ -40,12 +40,12 @@ public class Historico {
         return nome;
     }
 
-    public void setNumeroChave(int numeroChave) {
-        this.numeroChave = numeroChave;
+    public void setIdChave(int idChave) {
+        this.idChave = idChave;
     }
 
-    public int getNumeroChave() {
-        return numeroChave;
+    public int getIdChave() {
+        return idChave;
     }
 
     public void setObservacoes(String observacoes) {

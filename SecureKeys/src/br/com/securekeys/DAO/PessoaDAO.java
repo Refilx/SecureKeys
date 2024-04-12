@@ -253,4 +253,72 @@ public class PessoaDAO {
             }
         }
     }
+
+    /**
+     *  O método verifica se existe um CPF no banco de dados identico ao informado no parâmetro
+     * @param cpf
+     * @return
+     */
+    public boolean verifyCPF(String cpf) {
+
+        String sql = "SELECT cpf FROM pessoa";
+
+        //
+        boolean resultadoVerify = true;
+
+        Connection conn = null;
+
+        //
+        PreparedStatement pstm = null;
+
+        //
+        ResultSet rset = null;
+
+        try{
+            //
+            conn = ConnectionFactory.createConnectionToMySQL();
+
+            //
+            pstm = conn.prepareStatement(sql);
+
+            //
+            rset = pstm.executeQuery();
+
+            //
+            while (rset.next()){
+                //
+                String cpfDoBanco = rset.getString("cpf");
+
+                //
+                if(cpf.equalsIgnoreCase(cpfDoBanco)){
+                    resultadoVerify = false;
+                    break;
+                }
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            try {
+                //
+                if(rset!=null){
+                    rset.close();
+                }
+
+                if(pstm!=null){
+                    pstm.close();
+                }
+
+                if(conn!=null){
+                    conn.close();
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return resultadoVerify;
+
+    }
 }

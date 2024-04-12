@@ -25,11 +25,13 @@ DROP TABLE IF EXISTS `chaves`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `chaves` (
-  `numeroChave` int NOT NULL AUTO_INCREMENT,
+  `idChave` int NOT NULL AUTO_INCREMENT,
+  `numeroChave` int NOT NULL,
   `sala` varchar(30) DEFAULT NULL,
+  `observacoes` varchar(30) DEFAULT NULL,
   `quantChave` int NOT NULL,
   `status` varchar(30) DEFAULT NULL,
-  PRIMARY KEY (`numeroChave`)
+  PRIMARY KEY (`idChave`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -39,7 +41,7 @@ CREATE TABLE `chaves` (
 
 LOCK TABLES `chaves` WRITE;
 /*!40000 ALTER TABLE `chaves` DISABLE KEYS */;
-INSERT INTO `chaves` VALUES (1,'LAB 124',2,'Disponivel'),(2,'LAB 115',2,'DISPONIVEL'),(3,'LAB 118',2,'Disponivel');
+INSERT INTO `chaves` VALUES (1, 124,'LAB 124','Chave Principal',2,'DISPONÍVEL'),(2, 115,'LAB 115','Chave Principal',2,'DISPONÍVEL'),(3, 118,'LAB 118','Chave Principal',2,'DISPONÍVEL');
 /*!40000 ALTER TABLE `chaves` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -53,14 +55,14 @@ DROP TABLE IF EXISTS `historico`;
 CREATE TABLE `historico` (
   `idHistorico` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(240) NOT NULL,
-  `numeroChave` int NOT NULL,
+  `idChave` int NOT NULL,
   `observacoes` varchar(500) DEFAULT NULL,
   `status` varchar(30) DEFAULT NULL,
   `dataAbertura` date DEFAULT NULL,
   `dataFechamento` date DEFAULT NULL,
   PRIMARY KEY (`idHistorico`),
-  KEY `numeroChave` (`numeroChave`),
-  CONSTRAINT `historico_ibfk_1` FOREIGN KEY (`numeroChave`) REFERENCES `chaves` (`numeroChave`)
+  KEY `idChave` (`idChave`),
+  CONSTRAINT `historico_ibfk_1` FOREIGN KEY (`idChave`) REFERENCES `chaves` (`idChave`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
