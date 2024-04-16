@@ -4,6 +4,8 @@
  */
 package br.com.securekeys.views;
 
+import br.com.securekeys.DAO.UsuarioDAO;
+
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.*;
@@ -645,12 +647,21 @@ public class DashboardScreen extends javax.swing.JFrame {
 
     private void btnAddUsuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddUsuarioMouseClicked
         // TODO add your handling code here:
-        AddUserScreen addUser = new AddUserScreen();
-        addUser.setSize(1700, 900);
-        if(!btnAddUsuario.isEnabled() == false){
-            jDesktopPane1.add(addUser).setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(null, "Não é permitido abrir duas janelas ao mesmo tempo!", "ATENÇÃO!", HEIGHT);
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+
+        if(usuarioDAO.verifySuperUser()) {
+            AddUserScreen addUser = new AddUserScreen();
+            addUser.setSize(1700, 900);
+            if (!btnAddUsuario.isEnabled() == false) {
+                jDesktopPane1.add(addUser).setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Não é permitido abrir duas janelas ao mesmo tempo!", "ATENÇÃO!", HEIGHT);
+            }
+
+        } else{
+            //Mensagem de Alerta caso o usuário não seja um Administrador
+            JOptionPane.showMessageDialog(null, "Você não tem permissão para criar novos usuários \nEntre em contato com um Administrador caso necessite raalizar essa operação",
+                    "Ausencia de Permição",JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnAddUsuarioMouseClicked
 

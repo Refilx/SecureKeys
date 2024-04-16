@@ -304,5 +304,68 @@ public class UsuarioDAO {
         return resultadoVerify;
     }
 
+    /**
+     * O método abaixo verifica se a role do ultimo usuário que realizou o login é um Administrador
+     * @return
+     */
+    public boolean verifySuperUser() {
+
+        String sql = "SELECT L.idLogs, U.username, U.role FROM logs L \n" +
+                    "JOIN usuario U ON (L.idUser = U.idUser) \n" +
+                    "ORDER BY idLogs DESC limit 1";
+
+        boolean resultadoVerify = false;
+
+        Connection conn = null;
+
+        PreparedStatement pstm = null;
+
+        ResultSet rset = null;
+
+        try{
+            //
+            conn = ConnectionFactory.createConnectionToMySQL();
+
+            //
+            pstm = conn.prepareStatement(sql);
+
+            //
+            rset = pstm.executeQuery();
+
+            //
+            rset.next();
+
+            //
+            String role = rset.getString("role");
+
+            if(role.equals("Administrador")){
+                resultadoVerify = true;
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            try{
+                //
+                if(rset!=null){
+                    rset.close();
+                }
+
+                if(pstm!=null){
+                    pstm.close();
+                }
+
+                if(conn!=null){
+                    conn.close();
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return resultadoVerify;
+    }
+
 
 }
