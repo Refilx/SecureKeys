@@ -63,6 +63,7 @@ public class ChaveDAO {
 
     //O método executa o READ no banco de dados
     public List<Chave> getChave() {
+
         String sql = "SELECT * FROM chaves";
 
         List<Chave> listaChave = new ArrayList<Chave>();
@@ -229,13 +230,11 @@ public class ChaveDAO {
      */
     public void updateStatusChave(int idChave){
 
-        String sql = "SELECT * FROM chaves WHERE idChave = ?";
+        String sql = "UPDATE chaves SET status = 'INDISPONÍVEL' WHERE idChave = ?";
 
         Connection conn = null;
 
         PreparedStatement pstm = null;
-
-        ResultSet rset = null;
 
         try{
             //Cria a conexão com o banco de dados
@@ -247,93 +246,8 @@ public class ChaveDAO {
             //
             pstm.setInt(1, idChave);
 
-            //O ResultSet executa a Query
-            rset = pstm.executeQuery();
-
-            //Posiciona o cursor do Result Set no primeira linha de resultado
-            rset.next();
-
-            //Recupera a quantidade de uma chave específica no banco de dados
-            int quantChave = rset.getInt("quantChave");
-
-            Connection connUpdate = null;
-
-            PreparedStatement pstmUpdate = null;
-
             //
-            if(quantChave==0){
-
-                String setIndisponivel = "UPDATE chaves SET status = 'INDISPONÍVEL' WHERE idChave = ?";
-
-                try{
-                    //Cria a conexão com o banco de dados
-                    connUpdate = ConnectionFactory.createConnectionToMySQL();
-
-                    //Criamos uma PreparedStatement para executar uma query
-                    pstmUpdate = conn.prepareStatement(setIndisponivel);
-
-                    //
-                    pstmUpdate.setInt(1, idChave);
-
-                    //
-                    pstmUpdate.execute();
-
-                }catch(Exception e){
-                    e.printStackTrace();
-                }finally{
-                    try{
-
-                        //Fechar as conexões que foram abertas
-                        if(pstm!=null){
-                            pstmUpdate.close();
-                        }
-
-                        if(conn!=null) {
-                            connUpdate.close();
-                        }
-
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            else {
-
-                String setDisponivel = "UPDATE chaves SET status = 'DISPONÍVEL' WHERE idChave = ?";
-
-                try{
-                    //Cria a conexão com o banco de dados
-                    connUpdate = ConnectionFactory.createConnectionToMySQL();
-
-                    //Criamos uma PreparedStatement para executar uma query
-                    pstmUpdate = conn.prepareStatement(setDisponivel);
-
-                    //
-                    pstmUpdate.setInt(1, idChave);
-
-                    //
-                    pstmUpdate.execute();
-
-                }catch(Exception e){
-                    e.printStackTrace();
-                }finally{
-                    try{
-
-                        //Fechar as conexões que foram abertas
-                        if(pstm!=null){
-                            pstmUpdate.close();
-                        }
-
-                        if(conn!=null) {
-                            connUpdate.close();
-                        }
-
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            }
+            pstm.execute();
 
         }catch(Exception e){
             e.printStackTrace();
@@ -341,10 +255,6 @@ public class ChaveDAO {
             try{
 
                 //Fechar as conexões que foram abertas
-                if(rset!=null){
-                    rset.close();
-                }
-
                 if(pstm!=null){
                     pstm.close();
                 }
@@ -364,7 +274,7 @@ public class ChaveDAO {
      */
     public boolean verifyStatusChave(int idChave){
 
-        String sql = "SELECT status, quantChave FROM chaves WHERE idChave = ?";
+        String sql = "SELECT status, observacoes, quantChave FROM chaves WHERE idChave = ?";
 
         boolean resultadoVerify = false;
 
@@ -393,23 +303,46 @@ public class ChaveDAO {
             //
             Chave chave = new Chave();
 
-            //Variável que armazenará o valor do status da chave armazenada no  banco de dados
+            //Variável que armazenará as observacoes da chave (chave principal ou chave reserva) armazenada no banco de dados
+            chave.setObservacoes(rset.getString("observacoes"));
+
+            //Variável que armazenará o valor do status da chave armazenada no banco de dados
             chave.setStatus(rset.getString("status"));
 
             //Variável que armazenará a quantidade de chaves que estarão na portaria no momento em que for realizado o emprestimo
             chave.setQuantChave(rset.getInt("quantChave"));
 
-            //Se o status da chave for disponível, o resultado recebe um valor true
-            if (chave.getQuantChave() > 0 && chave.getStatus().equalsIgnoreCase("DISPONIVEL")) {
+            //Se o status da chave for disponível, a quantidade for maior que 0 (zero) e não for uma chave reserva, o resultado recebe um valor true
+            if (
+                chave.getQuantChave() > 0 &&
+                chave.getStatus().equalsIgnoreCase("DISPONÍVEL") &&
+                !chave.getObservacoes().equalsIgnoreCase("Chave Reserva")
+            ) {
                 resultadoVerify = true;
-            } else if (chave.getQuantChave() == 0) {
+            }
+            //Tratamento de chaves com a quantidade igual a 0 (zero)
+            else if (chave.getQuantChave() == 0) {
                 //
                 ChaveDAO chaveDAO = new ChaveDAO();
 
                 //
                 chaveDAO.updateStatusChave(idChave);
             }
+            //Tratamento de emprestimo de chave reserva
+            else if(chave.getObservacoes().equalsIgnoreCase("Chave Reserva")){
 
+                //Mensagem de confirmação de emprestimo de chave reserva
+                int opcao = JOptionPane.showOptionDialog(null, "Você está emprestando uma Chave RESERVA! \n Tem certeza que deseja continuar?",
+                "Chave Reserva Identificada", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"Sim", "Não"}, null );
+
+                if(opcao == 0){
+                    resultadoVerify = true;
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "A Chave NÃO foi emprestada!",
+                            "Cancelado!", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
 
         }catch(Exception e){
             e.printStackTrace();

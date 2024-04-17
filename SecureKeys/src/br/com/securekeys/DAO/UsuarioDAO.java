@@ -338,7 +338,7 @@ public class UsuarioDAO {
             //
             String role = rset.getString("role");
 
-            if(role.equals("Administrador")){
+            if(role.equalsIgnoreCase("Administrador")){
                 resultadoVerify = true;
             }
 

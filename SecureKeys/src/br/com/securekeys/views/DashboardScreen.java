@@ -652,6 +652,7 @@ public class DashboardScreen extends javax.swing.JFrame {
         if(usuarioDAO.verifySuperUser()) {
             AddUserScreen addUser = new AddUserScreen();
             addUser.setSize(1700, 900);
+
             if (!btnAddUsuario.isEnabled() == false) {
                 jDesktopPane1.add(addUser).setVisible(true);
             } else {
@@ -685,6 +686,7 @@ public class DashboardScreen extends javax.swing.JFrame {
         int opcao = JOptionPane.showOptionDialog(null, "Tem certeza que deseja sair?", "Confirmação",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"Sim", "Não"}, null);
 
+        //Se o usuário selecionar a opção "Sim", a aplicação irá fechar a tela de dashboard e voltar para a tela de login
         if(opcao == 0){
             this.dispose();
 

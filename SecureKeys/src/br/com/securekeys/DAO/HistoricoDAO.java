@@ -18,7 +18,7 @@ public class HistoricoDAO {
      */
     public void save(Historico historico){
 
-        String sql = "INSERT INTO historico(nome, idChave, observacoes, status, dataAbertura) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO historico(idChave, idPessoa, observacoes, status, dataAbertura) VALUES (?, ?, ?, ?, ?)";
 
         Connection conn = null;
 
@@ -32,8 +32,8 @@ public class HistoricoDAO {
             pstm = conn.prepareStatement(sql);
 
             //
-            pstm.setString(1, historico.getNome());
-            pstm.setInt(2, historico.getIdChave());
+            pstm.setInt(1, historico.getIdChave());
+            pstm.setInt(2, historico.getIdPessoa());
             pstm.setString(3, historico.getObservacoes());
             pstm.setString(4, historico.getStatus());
             pstm.setDate(5, new Date(historico.getDataAbertura().getTime()));
@@ -67,7 +67,7 @@ public class HistoricoDAO {
      */
     public void update(Historico historico){
 
-        String sql = "UPDATE historico SET nome = ?, idChave = ?, observacoes = ?, status = ?"+
+        String sql = "UPDATE historico SET idChave = ?, idPessoa = ?, observacoes = ?, status = ?"+
                 "WHERE idHistorico = ?";
 
         Connection conn = null;
@@ -82,8 +82,8 @@ public class HistoricoDAO {
             pstm = conn.prepareStatement(sql);
 
             //
-            pstm.setString(1, historico.getNome());
-            pstm.setInt(2, historico.getIdChave());
+            pstm.setInt(1, historico.getIdChave());
+            pstm.setInt(2, historico.getIdPessoa());
             pstm.setString(3, historico.getObservacoes());
             pstm.setString(4, historico.getStatus());
 
@@ -119,7 +119,9 @@ public class HistoricoDAO {
      */
     public void updateDataFechamento(Historico historico){
 
-        String sql = "UPDATE historico SET dataFechamento = ? WHERE idHistorico = ?";
+        String sql = "UPDATE historico SET dataFechamento = ?, status = 'ENCERRADO' WHERE idHistorico = ?";
+
+        historico.setDataFechamento(new java.util.Date());
 
         Connection conn = null;
 
@@ -167,7 +169,7 @@ public class HistoricoDAO {
      */
     public List<Historico> getHistorico(){
 
-        String sql = "SELECT * FROM historico";
+        String sql = "SELECT * FROM consultahistorico";
 
         List<Historico> listaHistorico = new ArrayList<Historico>();
 
@@ -194,13 +196,13 @@ public class HistoricoDAO {
                 Historico historico = new Historico();
 
                 //
-                historico.setIdHistorico(rset.getInt("idHistorico"));
+                historico.setNumeroChave(rset.getInt("numerochave"));
 
                 //
                 historico.setNome(rset.getString("nome"));
 
                 //
-                historico.setIdChave(rset.getInt("idChave"));
+                historico.setCargo(rset.getString("cargo"));
 
                 //
                 historico.setObservacoes(rset.getString("observacoes"));
@@ -285,7 +287,5 @@ public class HistoricoDAO {
             }
         }
     }
-
-
 
 }
