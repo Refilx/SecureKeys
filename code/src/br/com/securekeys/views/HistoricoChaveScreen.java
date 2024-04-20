@@ -193,10 +193,7 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
 
             public Object getCellEditorValue() {
                 if (isPushed) {
-                    //
-//                    for(int i = 0; i < historicos.length; i++){
-//                        System.out.println(tableParaHistorico.getNumeroChave());
-//                    }
+
                     //Testa se o campo dataFechamento está vazio
                     if(dadosDaTable.getDataFechamento()==null) {
                         ChaveDAO chaveDAO = new ChaveDAO();
@@ -302,7 +299,6 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration
 }
