@@ -67,7 +67,7 @@ public class HistoricoDAO {
      */
     public void update(Historico historico){
 
-        String sql = "UPDATE historico SET idChave = ?, idPessoa = ?, observacoes = ?, status = ?"+
+        String sql = "UPDATE historico SET idChave = ?, observacoes = ?, status = ?"+
                 "WHERE idHistorico = ?";
 
         Connection conn = null;
@@ -83,12 +83,11 @@ public class HistoricoDAO {
 
             //
             pstm.setInt(1, historico.getIdChave());
-            pstm.setInt(2, historico.getIdPessoa());
-            pstm.setString(3, historico.getObservacoes());
-            pstm.setString(4, historico.getStatus());
+            pstm.setString(2, historico.getObservacoes());
+            pstm.setString(3, historico.getStatus());
 
             //
-            pstm.setInt(5, historico.getIdHistorico());
+            pstm.setInt(4, historico.getIdHistorico());
 
             //
             pstm.execute();
@@ -194,6 +193,12 @@ public class HistoricoDAO {
 
                 //
                 Historico historico = new Historico();
+
+                //
+                historico.setIdHistorico(rset.getInt("idHistorico"));
+
+                //
+                historico.setIdChave(rset.getInt("idChave"));
 
                 //
                 historico.setNumeroChave(rset.getInt("numerochave"));

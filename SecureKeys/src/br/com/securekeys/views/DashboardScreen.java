@@ -6,11 +6,8 @@ package br.com.securekeys.views;
 
 import br.com.securekeys.DAO.UsuarioDAO;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 import javax.swing.*;
-import java.awt.Image;
-import java.awt.Graphics;
 
 /**
  *
@@ -621,6 +618,14 @@ public class DashboardScreen extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Usando a Graphics Device para obter as configurações de resolução do dispositivo usado
+     * Para o tamanho das telas se adapte as configurações do dispositivo usado
+     */
+    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    int width = gd.getDisplayMode().getWidth();
+    int height = gd.getDisplayMode().getHeight();
+
     private void inputSearchFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_inputSearchFocusGained
         if(inputSearch.getText().equals("Procurar...")){
             inputSearch.setText(null);
@@ -668,9 +673,9 @@ public class DashboardScreen extends javax.swing.JFrame {
 
     private void btnAddChaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddSalaMouseClicked
         // TODO add your handling code here:
-        AddChaveScreen addSala = new AddChaveScreen();
-        addSala.setSize(1700, 900);
-        jDesktopPane1.add(addSala).setVisible(true);
+        AddChaveScreen addChave = new AddChaveScreen();
+        addChave.setSize(1700, 900);
+        jDesktopPane1.add(addChave).setVisible(true);
     }//GEN-LAST:event_btnAddSalaMouseClicked
 
     private void btnHistoricoChavesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHistoricoChavesMouseClicked
@@ -732,6 +737,7 @@ public class DashboardScreen extends javax.swing.JFrame {
                 new DashboardScreen().setVisible(true);
             }
         });
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

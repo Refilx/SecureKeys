@@ -4,13 +4,16 @@
  */
 package br.com.securekeys.views;
 
+import br.com.securekeys.DAO.ChaveDAO;
 import br.com.securekeys.DAO.HistoricoDAO;
 import br.com.securekeys.model.Historico;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -35,24 +38,24 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jPanel1 = new JPanel();
+        jLabel1 = new JLabel();
+        jPanel2 = new JPanel( new BorderLayout());
+        jScrollPane1 = new JScrollPane();
+        jTable1 = new JTable();
 
         setClosable(true);
-        setMinimumSize(new java.awt.Dimension(1795, 701));
-        setPreferredSize(new java.awt.Dimension(1795, 201));
+        setMinimumSize(new Dimension(1795, 701));
+        setPreferredSize(new Dimension(1795, 201));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new Color(255, 255, 255));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setForeground(new Color(102, 102, 102));
+        jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel1.setText("Cadastrar nova sala");
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBackground(new Color(255, 255, 255));
 
         /**
          * Foi necessesário intanciar a lista de histórico do banco de dados antes da tabela
@@ -60,13 +63,13 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
          */
         HistoricoDAO historicoDAO = new HistoricoDAO();
 
-        Historico[] historicos =  historicoDAO.getHistorico().toArray(new Historico[0]);
+        final Historico[] historicos = historicoDAO.getHistorico().toArray(new Historico[0]);
 
 
-        jTable1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [historicos.length][7],
-                new String [] {
+        jTable1.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
+        jTable1.setModel(new DefaultTableModel(
+                new Object[historicos.length][7],
+                new String[]{
                         "Nº da chave", "Nome da pessoa", "Cargo", "Observação", "Status", "Data de abertura", "Data de fechamento", "Ações"
                 }
         ));
@@ -83,84 +86,215 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
         jTable1.getColumnModel().getColumn(6).setPreferredWidth(150);
         jTable1.getColumnModel().getColumn(7).setPreferredWidth(150);
 
+        //Botão para exportar os dados da tabela
+        JButton btnExport = new JButton();
 
-        // jt_usuario.getColumnModel().getColumn(1).setPreferredWidth(200);
+        // Caso o usuário clique no botão o sistema exportará os dados para uma planilha excel
+        class MyListener implements ActionListener {
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == btnExport) {
+                    new JTableToExcel(jTable1);
+                }
+            }
+        }
 
-//        Historico historico = new Historico();
-//
-//        historico.setNome("Geovanna");
-//        historico.setIdChave(2);
-//        historico.setObservacoes("A PM pegou a chave do laboratório 118");
-//        historico.setStatus("Em Aberto");
-//        historico.setDataAbertura(new Date());
-//
-//        List<Historico> historicoList = new ArrayList<>();
-//
-//        historicoList.add(historico);
-//        historicoList.add(historico);
-//        historicoList.add(historico);
-//        historicoList.add(historico);
-
-//        Historico[] historicos =  historicoList.toArray(new Historico[0]);
+        //Tentar adicionar um botão para Exportar os dados
+        btnExport.setText("Export to Excel");
+        btnExport.setBorder(null);
+        btnExport.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnExport.addActionListener(new MyListener());
+        btnExport.setIcon( new javax.swing.ImageIcon(getClass().getClassLoader().getResource("br/com/securekeys/icons/excel.png")));
 
         //Setando os valores de cada coluna
-        for(int i=0; i < historicos.length; i++){
+        for (int i = 0; i < historicos.length; i++) {
             jTable1.setValueAt(historicos[i].getNumeroChave(), i, 0);
             jTable1.setValueAt(historicos[i].getNome(), i, 1);
-            jTable1.setValueAt( historicos[i].getCargo(), i, 2);
+            jTable1.setValueAt(historicos[i].getCargo(), i, 2);
             jTable1.setValueAt(historicos[i].getObservacoes(), i, 3);
             jTable1.setValueAt(historicos[i].getStatus(), i, 4);
             jTable1.setValueAt(historicos[i].getDataAbertura(), i, 5);
             jTable1.setValueAt(historicos[i].getDataFechamento(), i, 6);
+            jTable1.setValueAt("Devolver Chave", i, 7);
         }
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        /**
+         *  CLASSES DE BOTÕES DA COLUNA DE AÇÕES INICIO
+         */
+
+        /**
+         * @version 1.0 11/09/98
+         */
+
+        class ButtonRenderer extends JButton implements TableCellRenderer {
+
+            public ButtonRenderer() {
+                setOpaque(true);
+            }
+
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                                                           boolean isSelected, boolean hasFocus, int row, int column) {
+                if (isSelected) {
+                    setForeground(table.getSelectionForeground());
+                    setBackground(table.getSelectionBackground());
+                } else {
+                    setForeground(table.getForeground());
+                    setBackground(UIManager.getColor("Button.background"));
+                }
+                setText((value == null) ? "" : value.toString());
+                return this;
+            }
+        }
+
+        /**
+         * @version 1.0 11/09/98
+         */
+
+        class ButtonEditor extends DefaultCellEditor {
+            protected JButton buttonTeste;
+
+            private String labelTeste;
+
+            private Historico dadosDaTable = new Historico();
+
+            private boolean isPushed;
+
+            public ButtonEditor(JCheckBox checkBox) {
+                super(checkBox);
+                buttonTeste = new JButton();
+                buttonTeste.setOpaque(true);
+                buttonTeste.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        fireEditingStopped();
+                    }
+                });
+            }
+
+            public Component getTableCellEditorComponent(JTable table, Object value,
+                                                         boolean isSelected, int row, int column) {
+                if (isSelected) {
+                    buttonTeste.setForeground(table.getSelectionForeground());
+                    buttonTeste.setBackground(table.getSelectionBackground());
+                } else {
+                    buttonTeste.setForeground(table.getForeground());
+                    buttonTeste.setBackground(table.getBackground());
+                }
+
+                //
+                dadosDaTable.setIdHistorico(historicos[row].getIdHistorico());
+                dadosDaTable.setIdChave(historicos[row].getIdChave());
+                dadosDaTable.setDataFechamento(historicos[row].getDataFechamento());
+
+                labelTeste = (value == null) ? "" : value.toString();
+                buttonTeste.setText(labelTeste);
+                isPushed = true;
+                return buttonTeste;
+            }
+
+
+            public Object getCellEditorValue() {
+                if (isPushed) {
+                    //
+//                    for(int i = 0; i < historicos.length; i++){
+//                        System.out.println(tableParaHistorico.getNumeroChave());
+//                    }
+                    //Testa se o campo dataFechamento está vazio
+                    if(dadosDaTable.getDataFechamento()==null) {
+                        ChaveDAO chaveDAO = new ChaveDAO();
+
+                        chaveDAO.devolverChave(dadosDaTable);
+
+                        Historico[] listaAtualizada = historicoDAO.getHistorico().toArray(new Historico[0]);
+
+                        for (int i = 0; i < historicos.length; i++) {
+                            jTable1.setValueAt(listaAtualizada[i].getNumeroChave(), i, 0);
+                            jTable1.setValueAt(listaAtualizada[i].getNome(), i, 1);
+                            jTable1.setValueAt(listaAtualizada[i].getCargo(), i, 2);
+                            jTable1.setValueAt(listaAtualizada[i].getObservacoes(), i, 3);
+                            jTable1.setValueAt(listaAtualizada[i].getStatus(), i, 4);
+                            jTable1.setValueAt(listaAtualizada[i].getDataAbertura(), i, 5);
+                            jTable1.setValueAt(listaAtualizada[i].getDataFechamento(), i, 6);
+                            jTable1.setValueAt("Devolver Chave", i, 7);
+                        }
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null, "A chave já foi devolvida");
+                    }
+//                    System.out.println(dadosDaTable.getNumeroChave() + ": NumChave!");
+//                    System.out.println(dadosDaTable.getIdHistorico() + ": ID!");
+                }
+                isPushed = false;
+                return new String(labelTeste);
+            }
+
+            public boolean stopCellEditing() {
+                isPushed = false;
+                return super.stopCellEditing();
+            }
+
+            protected void fireEditingStopped() {
+                super.fireEditingStopped();
+            }
+        }
+
+        /**
+         *  CLASSES DE BOTÕES DA COLUNA DE AÇÕES FIM
+         */
+
+        for(int i = 0; i < historicos.length; i++) {
+            jTable1.getColumn("Ações").setCellRenderer(new ButtonRenderer());
+            jTable1.getColumn("Ações").setCellEditor(new ButtonEditor(new JCheckBox()));
+        }
+
+        GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
-                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1771, Short.MAX_VALUE)
-                                .addContainerGap())
+                                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 1920, Short.MAX_VALUE)
+                                .addContainerGap()
+                        )
         );
         jPanel2Layout.setVerticalGroup(
-                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
-                                .addGap(16, 16, 16))
+                                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                                .addGap(16, 16, 16)
+                        )
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>
-
 
 
     // Variables declaration - do not modify
@@ -168,6 +302,7 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration
 }
