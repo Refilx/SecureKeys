@@ -53,7 +53,7 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
         jLabel1.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new Color(102, 102, 102));
         jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
-        jLabel1.setText("Cadastrar nova sala");
+        jLabel1.setText("Cadastrar nova Chave");
 
         jPanel2.setBackground(new Color(255, 255, 255));
 
@@ -65,26 +65,7 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
 
         final Historico[] historicos = historicoDAO.getHistorico().toArray(new Historico[0]);
 
-
-        jTable1.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
-        jTable1.setModel(new DefaultTableModel(
-                new Object[historicos.length][7],
-                new String[]{
-                        "Nº da chave", "Nome da pessoa", "Cargo", "Observação", "Status", "Data de abertura", "Data de fechamento", "Ações"
-                }
-        ));
-        jTable1.setColumnSelectionAllowed(true);
-        jScrollPane1.setViewportView(jTable1);
-        jTable1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        jTable1.setRowHeight(50);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(100);
-        jTable1.getColumnModel().getColumn(1).setPreferredWidth(200);
-        jTable1.getColumnModel().getColumn(2).setPreferredWidth(200);
-        jTable1.getColumnModel().getColumn(3).setPreferredWidth(550);
-        jTable1.getColumnModel().getColumn(4).setPreferredWidth(150);
-        jTable1.getColumnModel().getColumn(5).setPreferredWidth(150);
-        jTable1.getColumnModel().getColumn(6).setPreferredWidth(150);
-        jTable1.getColumnModel().getColumn(7).setPreferredWidth(150);
+        jTable1 = tableConfig(jTable1, historicos);
 
         //Botão para exportar os dados da tabela
         JButton btnExport = new JButton();
@@ -106,16 +87,7 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
         btnExport.setIcon( new javax.swing.ImageIcon(getClass().getClassLoader().getResource("br/com/securekeys/icons/excel.png")));
 
         //Setando os valores de cada coluna
-        for (int i = 0; i < historicos.length; i++) {
-            jTable1.setValueAt(historicos[i].getNumeroChave(), i, 0);
-            jTable1.setValueAt(historicos[i].getNome(), i, 1);
-            jTable1.setValueAt(historicos[i].getCargo(), i, 2);
-            jTable1.setValueAt(historicos[i].getObservacoes(), i, 3);
-            jTable1.setValueAt(historicos[i].getStatus(), i, 4);
-            jTable1.setValueAt(historicos[i].getDataAbertura(), i, 5);
-            jTable1.setValueAt(historicos[i].getDataFechamento(), i, 6);
-            jTable1.setValueAt("Devolver Chave", i, 7);
-        }
+        refresh(jTable1, historicos);
 
         /**
          *  CLASSES DE BOTÕES DA COLUNA DE AÇÕES INICIO
@@ -154,6 +126,8 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
 
             private String labelTeste;
 
+            private int numeroColuna;
+
             private Historico dadosDaTable = new Historico();
 
             private boolean isPushed;
@@ -179,10 +153,15 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
                     buttonTeste.setBackground(table.getBackground());
                 }
 
+                Historico[] listaAtualizada = historicoDAO.getHistorico().toArray(new Historico[0]);
+
                 //
-                dadosDaTable.setIdHistorico(historicos[row].getIdHistorico());
-                dadosDaTable.setIdChave(historicos[row].getIdChave());
-                dadosDaTable.setDataFechamento(historicos[row].getDataFechamento());
+                dadosDaTable.setIdHistorico(listaAtualizada[row].getIdHistorico());
+                dadosDaTable.setIdChave(listaAtualizada[row].getIdChave());
+                dadosDaTable.setDataFechamento(listaAtualizada[row].getDataFechamento());
+
+                //
+                numeroColuna = column;
 
                 labelTeste = (value == null) ? "" : value.toString();
                 buttonTeste.setText(labelTeste);
@@ -194,30 +173,56 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
             public Object getCellEditorValue() {
                 if (isPushed) {
 
-                    //Testa se o campo dataFechamento está vazio
-                    if(dadosDaTable.getDataFechamento()==null) {
-                        ChaveDAO chaveDAO = new ChaveDAO();
+                    // Colocar confirmação nas ações dos botões de devolução e exclusão
 
-                        chaveDAO.devolverChave(dadosDaTable);
+                    //Testa se o botão apertado foi da coluna de ações
+                    if(numeroColuna == 7) {
 
-                        Historico[] listaAtualizada = historicoDAO.getHistorico().toArray(new Historico[0]);
+                        int opcao = JOptionPane.showOptionDialog(null, "Deseja mesmo devolver essa chave?", "Confirmação",
+                                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"Sim","Não"}, null);
 
-                        for (int i = 0; i < historicos.length; i++) {
-                            jTable1.setValueAt(listaAtualizada[i].getNumeroChave(), i, 0);
-                            jTable1.setValueAt(listaAtualizada[i].getNome(), i, 1);
-                            jTable1.setValueAt(listaAtualizada[i].getCargo(), i, 2);
-                            jTable1.setValueAt(listaAtualizada[i].getObservacoes(), i, 3);
-                            jTable1.setValueAt(listaAtualizada[i].getStatus(), i, 4);
-                            jTable1.setValueAt(listaAtualizada[i].getDataAbertura(), i, 5);
-                            jTable1.setValueAt(listaAtualizada[i].getDataFechamento(), i, 6);
-                            jTable1.setValueAt("Devolver Chave", i, 7);
+                        //Testa se o campo dataFechamento está vazio
+                        if (dadosDaTable.getDataFechamento() == null && opcao == 0) {
+                            ChaveDAO chaveDAO = new ChaveDAO();
+
+                            chaveDAO.devolverChave(dadosDaTable);
+
+                            Historico[] listaAtualizada = historicoDAO.getHistorico().toArray(new Historico[0]);
+
+                            refresh(jTable1, listaAtualizada);
+
+                        } else if(!dadosDaTable.getDataFechamento().toString().isBlank() && opcao == 0) {
+                            JOptionPane.showMessageDialog(null, "A chave já foi devolvida");
                         }
                     }
-                    else{
-                        JOptionPane.showMessageDialog(null, "A chave já foi devolvida");
+
+                    // Se o usuário apertar o botão de DELETE
+                    if(numeroColuna == 8){
+
+                        // Confirma se o usuário deseja mesmo fazer a exclusão
+                        int opcao = JOptionPane.showOptionDialog(null, "Deseja mesmo excluir essa chave?", "Confirmação",
+                                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"Sim","Não"}, null);
+
+                        if(opcao == 0) {
+                            historicoDAO.deleteByID(dadosDaTable.getIdHistorico());
+
+                            Historico[] listaPosDelete = historicoDAO.getHistorico().toArray(new Historico[0]);
+
+                            jTable1 = tableConfig(jTable1, listaPosDelete);
+
+                            refresh(jTable1, listaPosDelete);
+
+                            // Botões de atualizar a dataFechamento
+                            jTable1.getColumnModel().getColumn(7).setCellRenderer(new ButtonRenderer());
+                            jTable1.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox()));
+
+                            // Botões de exluir o registro
+                            jTable1.getColumnModel().getColumn(8).setCellRenderer(new ButtonRenderer());
+                            jTable1.getColumnModel().getColumn(8).setCellEditor(new ButtonEditor(new JCheckBox()));
+
+
+                        }
                     }
-//                    System.out.println(dadosDaTable.getNumeroChave() + ": NumChave!");
-//                    System.out.println(dadosDaTable.getIdHistorico() + ": ID!");
                 }
                 isPushed = false;
                 return new String(labelTeste);
@@ -237,10 +242,28 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
          *  CLASSES DE BOTÕES DA COLUNA DE AÇÕES FIM
          */
 
-        for(int i = 0; i < historicos.length; i++) {
-            jTable1.getColumn("Ações").setCellRenderer(new ButtonRenderer());
-            jTable1.getColumn("Ações").setCellEditor(new ButtonEditor(new JCheckBox()));
-        }
+        // Botões de atualizar a dataFechamento
+        jTable1.getColumnModel().getColumn(7).setCellRenderer(new ButtonRenderer());
+        jTable1.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox()));
+
+        // Botões de exluir o registro
+        jTable1.getColumnModel().getColumn(8).setCellRenderer(new ButtonRenderer());
+        jTable1.getColumnModel().getColumn(8).setCellEditor(new ButtonEditor(new JCheckBox()));
+
+
+        // Pode-se fazer um botão que passe páginas e carregue dados diferentes na table OU Pode-se apenas filtrar o período(mês) e carregar os dados do período(mês)
+
+        // Para fazer os botões de passar as páginas precisa de:
+        // um FOR que vai atualizar os dados,
+        // de uma variável para armazenar o limite inferior (limite da página anterior),
+        // de uma variável para armazenar o limite superior (limite da página presente),
+        // logica para incrementar o contador, caso avance a página e decrementar o contador, caso volte a página
+        // de uma variável que esteja sempre sendo atualizada quanto aos id que serão setados na table,
+
+        // Se for adicionar um jComboBox como filtro (de períodos ou intervalo de meses que o registro será puxado do banco, exibir o mês filtrado)
+        // pega-se o períiodo do jComboBox e chama um método que será criado para puxar os dados do período selecionado,
+        // armazena os dados do período selecionado e passa para a table com um FOR
+
 
         GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -293,6 +316,59 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>
 
+    /**
+     * Método para atualizar os dados da tabela
+     * @param jTable
+     * @param array
+     * @return
+     */
+    private JTable refresh(JTable jTable, Historico[] array){
+        for(int i = 0; i < array.length; i++){
+            jTable.setValueAt(array[i].getNumeroChave(), i, 0);
+            jTable.setValueAt(array[i].getNome(), i, 1);
+            jTable.setValueAt(array[i].getCargo(), i, 2);
+            jTable.setValueAt(array[i].getObservacoes(), i, 3);
+            jTable.setValueAt(array[i].getStatus(), i, 4);
+            jTable.setValueAt(array[i].getDataAbertura(), i, 5);
+            jTable.setValueAt(array[i].getDataFechamento(), i, 6);
+            jTable.setValueAt("Devolver Chave", i, 7);
+            jTable.setValueAt("Excluir", i, 8);
+        }
+        return jTable;
+    }
+
+
+    /**
+     * Método para configurar a tabela
+     * @param table
+     * @param array
+     */
+    private JTable tableConfig(JTable table, Historico[] array){
+        table = new JTable();
+
+        table.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
+        table.setModel(new DefaultTableModel(
+                new Object[array.length][9],
+                new String[]{
+                        "Nº da chave", "Nome da pessoa", "Cargo", "Observação", "Status", "Data de abertura", "Data de fechamento", "",""
+                }
+        ));
+        table.setColumnSelectionAllowed(true);
+        jScrollPane1.setViewportView(table);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table.setRowHeight(50);
+        table.getColumnModel().getColumn(0).setPreferredWidth(80);
+        table.getColumnModel().getColumn(1).setPreferredWidth(200);
+        table.getColumnModel().getColumn(2).setPreferredWidth(170);
+        table.getColumnModel().getColumn(3).setPreferredWidth(575);
+        table.getColumnModel().getColumn(4).setPreferredWidth(150);
+        table.getColumnModel().getColumn(5).setPreferredWidth(125);
+        table.getColumnModel().getColumn(6).setPreferredWidth(125);
+        table.getColumnModel().getColumn(7).setPreferredWidth(125);
+        table.getColumnModel().getColumn(8).setPreferredWidth(100);
+
+        return table;
+    }
 
     // Variables declaration - do not modify
     private javax.swing.JLabel jLabel1;

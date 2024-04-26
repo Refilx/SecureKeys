@@ -27,15 +27,17 @@ class JTableToExcel extends JFrame {
             TableModel m = table.getModel();
             FileWriter fw = new FileWriter(file);
 
-            for(int i = 0; i < 7; i++){
-                fw.write(m.getColumnName(i) + "\t");
+            int column = 7;
+
+            for(int c = 0; c < column; c++){
+                fw.write(m.getColumnName(c) + "\t");
             }
 
             fw.write("\n");
 
-            for(int i=0; i < 7; i++) {
-                for(int j=0; j < 7; j++) {
-                    fw.write(m.getValueAt(i,j)+"\t");
+            for(int r=0; r < table.getRowCount(); r++) {
+                for(int c=0; c < column; c++) {
+                    fw.write(m.getValueAt(r,c)+"\t");
                 }
                 fw.write("\n");
             }

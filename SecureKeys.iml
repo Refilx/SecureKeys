@@ -3,14 +3,14 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/SecureKeys/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/src" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/SecureKeys/mysql-connector-j-8.3.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/code/jasypt-1.9.3.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -19,7 +19,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/SecureKeys/jasypt-1.9.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/code/mysql-connector-j-8.3.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

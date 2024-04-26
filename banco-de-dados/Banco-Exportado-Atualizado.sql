@@ -74,9 +74,9 @@ DROP TABLE IF EXISTS `historico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `historico` (
-  `idHistorico` int NOT NULL AUTO_INCREMENT,
-  `idChave` int NOT NULL,
-  `idPessoa` int NOT NULL,
+  `idHistorico` int AUTO_INCREMENT,
+  `idChave` int,
+  `idPessoa` int,
   `observacoes` varchar(500) DEFAULT NULL,
   `status` varchar(30) DEFAULT NULL,
   `dataAbertura` date DEFAULT NULL,

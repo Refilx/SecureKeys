@@ -255,36 +255,76 @@ public class HistoricoDAO {
      */
     public void deleteByID(int idHistorico){
 
-        String sql = "DELETE FROM historico WHERE idHistorico = ?";
+        String updateToNULL = "UPDATE historico SET idChave = NULL, idPessoa = NULL, observacoes = NULL, status = NULL, dataAbertura = NULL, dataFechamento = NULL WHERE idHistorico = ?;\n";
 
-        Connection conn = null;
+        Connection connUpdate = null;
 
-        PreparedStatement pstm = null;
+        PreparedStatement pstmUpdate = null;
 
         try{
             //
-            conn = ConnectionFactory.createConnectionToMySQL();
+            connUpdate = ConnectionFactory.createConnectionToMySQL();
 
             //
-            pstm = conn.prepareStatement(sql);
+            pstmUpdate = connUpdate.prepareStatement(updateToNULL);
+
+            // ID para fazer o update como null
+            pstmUpdate.setInt(1, idHistorico);
 
             //
-            pstm.setInt(1, idHistorico);
+            pstmUpdate.execute();
 
-            //
-            pstm.execute();
+            if(!pstmUpdate.execute()) {
+
+                String sql = " DELETE FROM historico WHERE idHistorico = ?;";
+
+                Connection conn = null;
+
+                PreparedStatement pstm = null;
+
+                try{
+                    //
+                    conn = ConnectionFactory.createConnectionToMySQL();
+
+                    //
+                    pstm = conn.prepareStatement(sql);
+
+                    // ID para fazer o update como null
+                    pstm.setInt(1, idHistorico);
+
+                    //
+                    pstm.execute();
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }finally{
+                    try{
+                        //
+                        if(pstm!=null){
+                            pstm.close();
+                        }
+
+                        if(conn!=null){
+                            conn.close();
+                        }
+
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
 
         }catch(Exception e){
             e.printStackTrace();
         }finally{
             try{
                 //
-                if(pstm!=null){
-                    pstm.close();
+                if(pstmUpdate!=null){
+                    pstmUpdate.close();
                 }
 
-                if(conn!=null){
-                    conn.close();
+                if(connUpdate!=null){
+                    connUpdate.close();
                 }
 
             }catch(Exception e){

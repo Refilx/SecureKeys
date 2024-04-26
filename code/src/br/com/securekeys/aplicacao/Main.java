@@ -7,6 +7,9 @@ import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.jasypt.util.password.PasswordEncryptor;
 
 import javax.security.auth.kerberos.EncryptionKey;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -215,13 +218,13 @@ public class Main {
         Historico historico = new Historico();
 
         historico.setIdPessoa(3);
-        historico.setIdChave(1);
+        historico.setIdChave(2);
         historico.setObservacoes("O programador pegou a chave do laboratório 124");
         historico.setStatus("Em Aberto");
         historico.setDataAbertura(new Date());
 
 
-        chaveDAO.emprestarChave(historico);
+//        chaveDAO.emprestarChave(historico);
 
         /**
          * Modificar método de devolver chaves, incluir verificação se tem chave para ser devolvida pelo usuário informado
@@ -232,24 +235,28 @@ public class Main {
 
         /**
          * Testando as Lists
+
+//        List<Historico> historicoList = new ArrayList<>();
+//
+//        historicoList.add(historico);
+//        historicoList.add(historico);
+//        historicoList.add(historico);
+//
+//        System.out.println(historicoList.get(0).getObservacoes());
+//
+//        System.out.println(new Timestamp(System.currentTimeMillis()));
+
+//        for(Historico h : historicoList){
+//            System.out.println("idHistórico: "+h.getIdHistorico()+
+//                                "\nNome: "+h.getNome()+
+//                                "\nIdChave: "+h.getIdChave()+
+//                                "\nObservações: "+h.getObservacoes()+
+//                                "\nStatus: "+h.getStatus()+
+//                                "\nData de Abertura: "+h.getDataAbertura()+
+//                                "\nData de Fechamento: "+h.getDataFechamento()+"\n");
+//        }
+
          */
-        List<Historico> historicoList = new ArrayList<>();
-
-        historicoList.add(historico);
-        historicoList.add(historico);
-        historicoList.add(historico);
-
-        for(Historico h : historicoList){
-            System.out.println("idHistórico: "+h.getIdHistorico()+
-                                "\nNome: "+h.getNome()+
-                                "\nIdChave: "+h.getIdChave()+
-                                "\nObservações: "+h.getObservacoes()+
-                                "\nStatus: "+h.getStatus()+
-                                "\nData de Abertura: "+h.getDataAbertura()+
-                                "\nData de Fechamento: "+h.getDataFechamento()+"\n");
-        }
-
-
 
 //        String s1 = "1234";
 //
