@@ -43,6 +43,7 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
         jPanel2 = new JPanel( new BorderLayout());
         jScrollPane1 = new JScrollPane();
         jTable1 = new JTable();
+        mesesList = new JComboBox<>();
 
         setClosable(true);
         setMinimumSize(new Dimension(1795, 701));
@@ -65,6 +66,17 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
 
         final Historico[] historicos = historicoDAO.getHistorico().toArray(new Historico[0]);
 
+        mesesList.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
+        mesesList.setModel(new DefaultComboBoxModel<>(historicoDAO.getMeses().toArray(new String[0])));
+
+        //Botão para exportar os dados da tabela
+        JButton btnFiltro = new JButton();
+
+        //Tentar adicionar um botão para Exportar os dados
+        btnFiltro.setText("Filtro");
+        btnFiltro.setBorder(null);
+        btnFiltro.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
         jTable1 = tableConfig(jTable1, historicos);
 
         //Botão para exportar os dados da tabela
@@ -84,7 +96,7 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
         btnExport.setBorder(null);
         btnExport.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnExport.addActionListener(new MyListener());
-        btnExport.setIcon( new javax.swing.ImageIcon(getClass().getClassLoader().getResource("br/com/securekeys/icons/excel.png")));
+        btnExport.setIcon( new ImageIcon(getClass().getClassLoader().getResource("br/com/securekeys/icons/excel.png")));
 
         //Setando os valores de cada coluna
         refresh(jTable1, historicos);
@@ -290,7 +302,16 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
                 jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnExport, GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(1450)
+                                .addComponent(mesesList, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
+                        )
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(1360)
+                                .addComponent(btnFiltro, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+                        )
+
         );
         jPanel1Layout.setVerticalGroup(
                 jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -299,7 +320,11 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel1)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnExport, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(mesesList, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnFiltro, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))
         );
 
         GroupLayout layout = new GroupLayout(getContentPane());
@@ -376,5 +401,6 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JComboBox mesesList;
     // End of variables declaration
 }

@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -331,6 +333,65 @@ public class HistoricoDAO {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<String> getMeses(){
+        String sql = "SELECT * FROM lista_meses";
+
+        List<String> mesesList = new ArrayList<String>();
+
+        Connection conn = null;
+
+        PreparedStatement pstm = null;
+
+        ResultSet rset = null;
+
+        try{
+            //
+            conn = ConnectionFactory.createConnectionToMySQL();
+
+            //
+            pstm = conn.prepareStatement(sql);
+
+            //
+            rset = pstm.executeQuery();
+
+            //
+            while(rset.next()){
+
+                //
+                String dataFormatada = rset.getString("ano_mes");
+
+                //
+                mesesList.add(dataFormatada);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+
+            try{
+                //
+                if(rset!=null){
+                    rset.close();
+                }
+
+                if(pstm!=null){
+                    pstm.close();
+                }
+
+                if(conn!=null){
+                    conn.close();
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        return mesesList;
     }
 
 }
