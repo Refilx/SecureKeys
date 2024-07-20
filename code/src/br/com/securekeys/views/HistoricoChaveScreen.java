@@ -76,191 +76,42 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
         btnFiltro.setText("Filtro");
         btnFiltro.setBorder(null);
         btnFiltro.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnFiltro.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnFiltroMouseClicked(evt);
+            }
+        });
 
-        jTable1 = tableConfig(jTable1, historicos);
+        TableConfigurator tableConfigurator = new TableConfigurator();
+
+        jTable1 = tableConfigurator.tableConfig(jTable1, historicos, jScrollPane1);
 
         //Botão para exportar os dados da tabela
         JButton btnExport = new JButton();
-
-        // Caso o usuário clique no botão o sistema exportará os dados para uma planilha excel
-        class MyListener implements ActionListener {
-            public void actionPerformed(ActionEvent e) {
-                if (e.getSource() == btnExport) {
-                    new JTableToExcel(jTable1);
-                }
-            }
-        }
 
         //Tentar adicionar um botão para Exportar os dados
         btnExport.setText("Export to Excel");
         btnExport.setBorder(null);
         btnExport.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnExport.addActionListener(new MyListener());
         btnExport.setIcon( new ImageIcon(getClass().getClassLoader().getResource("br/com/securekeys/icons/excel.png")));
+        btnExport.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnExportMouseClicked(evt);
+            }
+        });
 
         //Setando os valores de cada coluna
-        refresh(jTable1, historicos);
+        jTable1 = tableConfigurator.refresh(jTable1, historicos, jScrollPane1);
 
-        /**
-         *  CLASSES DE BOTÕES DA COLUNA DE AÇÕES INICIO
-         */
-
-        /**
-         * @version 1.0 11/09/98
-         */
-
-        class ButtonRenderer extends JButton implements TableCellRenderer {
-
-            public ButtonRenderer() {
-                setOpaque(true);
-            }
-
-            public Component getTableCellRendererComponent(JTable table, Object value,
-                                                           boolean isSelected, boolean hasFocus, int row, int column) {
-                if (isSelected) {
-                    setForeground(table.getSelectionForeground());
-                    setBackground(table.getSelectionBackground());
-                } else {
-                    setForeground(table.getForeground());
-                    setBackground(UIManager.getColor("Button.background"));
-                }
-                setText((value == null) ? "" : value.toString());
-                return this;
-            }
-        }
-
-        /**
-         * @version 1.0 11/09/98
-         */
-
-        class ButtonEditor extends DefaultCellEditor {
-            protected JButton buttonTeste;
-
-            private String labelTeste;
-
-            private int numeroColuna;
-
-            private Historico dadosDaTable = new Historico();
-
-            private boolean isPushed;
-
-            public ButtonEditor(JCheckBox checkBox) {
-                super(checkBox);
-                buttonTeste = new JButton();
-                buttonTeste.setOpaque(true);
-                buttonTeste.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        fireEditingStopped();
-                    }
-                });
-            }
-
-            public Component getTableCellEditorComponent(JTable table, Object value,
-                                                         boolean isSelected, int row, int column) {
-                if (isSelected) {
-                    buttonTeste.setForeground(table.getSelectionForeground());
-                    buttonTeste.setBackground(table.getSelectionBackground());
-                } else {
-                    buttonTeste.setForeground(table.getForeground());
-                    buttonTeste.setBackground(table.getBackground());
-                }
-
-                Historico[] listaAtualizada = historicoDAO.getHistorico().toArray(new Historico[0]);
-
-                //
-                dadosDaTable.setIdHistorico(listaAtualizada[row].getIdHistorico());
-                dadosDaTable.setIdChave(listaAtualizada[row].getIdChave());
-                dadosDaTable.setDataFechamento(listaAtualizada[row].getDataFechamento());
-
-                //
-                numeroColuna = column;
-
-                labelTeste = (value == null) ? "" : value.toString();
-                buttonTeste.setText(labelTeste);
-                isPushed = true;
-                return buttonTeste;
-            }
-
-
-            public Object getCellEditorValue() {
-                if (isPushed) {
-
-                    // Colocar confirmação nas ações dos botões de devolução e exclusão
-
-                    //Testa se o botão apertado foi da coluna de ações
-                    if(numeroColuna == 7) {
-
-                        int opcao = JOptionPane.showOptionDialog(null, "Deseja mesmo devolver essa chave?", "Confirmação",
-                                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"Sim","Não"}, null);
-
-                        //Testa se o campo dataFechamento está vazio
-                        if (dadosDaTable.getDataFechamento() == null && opcao == 0) {
-                            ChaveDAO chaveDAO = new ChaveDAO();
-
-                            chaveDAO.devolverChave(dadosDaTable);
-
-                            Historico[] listaAtualizada = historicoDAO.getHistorico().toArray(new Historico[0]);
-
-                            refresh(jTable1, listaAtualizada);
-
-                        } else if(!dadosDaTable.getDataFechamento().toString().isBlank() && opcao == 0) {
-                            JOptionPane.showMessageDialog(null, "A chave já foi devolvida");
-                        }
-                    }
-
-                    // Se o usuário apertar o botão de DELETE
-                    if(numeroColuna == 8){
-
-                        // Confirma se o usuário deseja mesmo fazer a exclusão
-                        int opcao = JOptionPane.showOptionDialog(null, "Deseja mesmo excluir essa chave?", "Confirmação",
-                                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"Sim","Não"}, null);
-
-                        if(opcao == 0) {
-                            historicoDAO.deleteByID(dadosDaTable.getIdHistorico());
-
-                            Historico[] listaPosDelete = historicoDAO.getHistorico().toArray(new Historico[0]);
-
-                            jTable1 = tableConfig(jTable1, listaPosDelete);
-
-                            refresh(jTable1, listaPosDelete);
-
-                            // Botões de atualizar a dataFechamento
-                            jTable1.getColumnModel().getColumn(7).setCellRenderer(new ButtonRenderer());
-                            jTable1.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox()));
-
-                            // Botões de exluir o registro
-                            jTable1.getColumnModel().getColumn(8).setCellRenderer(new ButtonRenderer());
-                            jTable1.getColumnModel().getColumn(8).setCellEditor(new ButtonEditor(new JCheckBox()));
-
-
-                        }
-                    }
-                }
-                isPushed = false;
-                return new String(labelTeste);
-            }
-
-            public boolean stopCellEditing() {
-                isPushed = false;
-                return super.stopCellEditing();
-            }
-
-            protected void fireEditingStopped() {
-                super.fireEditingStopped();
-            }
-        }
-
-        /**
-         *  CLASSES DE BOTÕES DA COLUNA DE AÇÕES FIM
-         */
+//        TableButtons tableButtons = new TableButtons();
 
         // Botões de atualizar a dataFechamento
-        jTable1.getColumnModel().getColumn(7).setCellRenderer(new ButtonRenderer());
-        jTable1.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox()));
+        jTable1.getColumnModel().getColumn(7).setCellRenderer(new TableButtons.ButtonRenderer());
+        jTable1.getColumnModel().getColumn(7).setCellEditor(new TableButtons.ButtonEditor(new JCheckBox(), jTable1, jScrollPane1));
 
         // Botões de exluir o registro
-        jTable1.getColumnModel().getColumn(8).setCellRenderer(new ButtonRenderer());
-        jTable1.getColumnModel().getColumn(8).setCellEditor(new ButtonEditor(new JCheckBox()));
+        jTable1.getColumnModel().getColumn(8).setCellRenderer(new TableButtons.ButtonRenderer());
+        jTable1.getColumnModel().getColumn(8).setCellEditor(new TableButtons.ButtonEditor(new JCheckBox(), jTable1, jScrollPane1));
 
 
         // Pode-se fazer um botão que passe páginas e carregue dados diferentes na table OU Pode-se apenas filtrar o período(mês) e carregar os dados do período(mês)
@@ -341,58 +192,27 @@ public class HistoricoChaveScreen extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>
 
-    /**
-     * Método para atualizar os dados da tabela
-     * @param jTable
-     * @param array
-     * @return
-     */
-    private JTable refresh(JTable jTable, Historico[] array){
-        for(int i = 0; i < array.length; i++){
-            jTable.setValueAt(array[i].getNumeroChave(), i, 0);
-            jTable.setValueAt(array[i].getNome(), i, 1);
-            jTable.setValueAt(array[i].getCargo(), i, 2);
-            jTable.setValueAt(array[i].getObservacoes(), i, 3);
-            jTable.setValueAt(array[i].getStatus(), i, 4);
-            jTable.setValueAt(array[i].getDataAbertura(), i, 5);
-            jTable.setValueAt(array[i].getDataFechamento(), i, 6);
-            jTable.setValueAt("Devolver Chave", i, 7);
-            jTable.setValueAt("Excluir", i, 8);
-        }
-        return jTable;
+
+    private void btnFiltroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHistoricoChavesMouseClicked
+        // TODO add your handling code here:
+
+       Historico[] historicoList = new HistoricoChave().filter(mesesList.getSelectedItem()).toArray(new Historico[0]);
+
+       JTable newTable = new JTable();
+
+       TableConfigurator configurator = new TableConfigurator();
+
+       newTable = configurator.tableConfig(newTable, historicoList, jScrollPane1);
+
+       configurator.refresh(newTable, historicoList, jScrollPane1);
     }
 
+    private void btnExportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHistoricoChavesMouseClicked
+        // TODO add your handling code here:
 
-    /**
-     * Método para configurar a tabela
-     * @param table
-     * @param array
-     */
-    private JTable tableConfig(JTable table, Historico[] array){
-        table = new JTable();
+        // Caso o usuário clique no botão o sistema exportará os dados para uma planilha excel
+        new JTableToExcel(jTable1);
 
-        table.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
-        table.setModel(new DefaultTableModel(
-                new Object[array.length][9],
-                new String[]{
-                        "Nº da chave", "Nome da pessoa", "Cargo", "Observação", "Status", "Data de abertura", "Data de fechamento", "",""
-                }
-        ));
-        table.setColumnSelectionAllowed(true);
-        jScrollPane1.setViewportView(table);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        table.setRowHeight(50);
-        table.getColumnModel().getColumn(0).setPreferredWidth(80);
-        table.getColumnModel().getColumn(1).setPreferredWidth(200);
-        table.getColumnModel().getColumn(2).setPreferredWidth(170);
-        table.getColumnModel().getColumn(3).setPreferredWidth(575);
-        table.getColumnModel().getColumn(4).setPreferredWidth(150);
-        table.getColumnModel().getColumn(5).setPreferredWidth(125);
-        table.getColumnModel().getColumn(6).setPreferredWidth(125);
-        table.getColumnModel().getColumn(7).setPreferredWidth(125);
-        table.getColumnModel().getColumn(8).setPreferredWidth(100);
-
-        return table;
     }
 
     // Variables declaration - do not modify

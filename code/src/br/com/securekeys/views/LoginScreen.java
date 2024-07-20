@@ -268,30 +268,12 @@ public class LoginScreen extends javax.swing.JFrame {
             }
         }
 
-        //Verificamos se os campos de usuário e senha estão devidamente preenchidos
-        if(user!=null && !pass.isBlank()){
-            LogsDAO logsDAO = new LogsDAO();
+        Login login = new Login();
 
-            //Verificação se o usuário ou a senha fornecida estão corretos
-            resultVerify = logsDAO.verifyPass(user, pass);
+        resultVerify = login.resultVerify(user, pass);
 
-            if(resultVerify){
-                //Mensagem de login bem sucedido
-                JOptionPane.showMessageDialog(null, "Login Realizado com Sucesso",
-                        "", JOptionPane.INFORMATION_MESSAGE, null);
-
-                btnLoginMouseClicked(null);
-
-            }
-            else{
-                //Mensagem de erro no usuário/senha
-                JOptionPane.showMessageDialog(null, "Usuário ou Senha Incorretos \nPor favor tente novamente",
-                        "Erro ao tentar realizar login", JOptionPane.ERROR_MESSAGE, null);
-            }
-        }
-        else{
-            JOptionPane.showMessageDialog(null, "Preencha todos os campos, por favor",
-                    "Erro ao tentar realizar o login",JOptionPane.WARNING_MESSAGE, null);
+        if(resultVerify){
+            btnLoginMouseClicked(null);
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
