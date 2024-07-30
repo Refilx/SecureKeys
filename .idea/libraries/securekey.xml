@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="securekey">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/SecureKey-screens-master/dist/securekey.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
