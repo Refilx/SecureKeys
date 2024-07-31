@@ -5,6 +5,7 @@ public class Chave{
     private int idChave;
     private int numeroChave;
     private String sala;
+    private String bloco;
     private String observacoes;
     private int quantChave;
     private String status;
@@ -33,6 +34,14 @@ public class Chave{
 
     public String getSala() {
         return sala;
+    }
+
+    public void setBloco(String bloco) {
+        this.bloco = bloco;
+    }
+
+    public String getBloco() {
+        return bloco;
     }
 
     public String getObservacoes() {

@@ -4,6 +4,10 @@
  */
 package br.com.securekeys.views.formScreen;
 
+import br.com.securekeys.DAO.UsuarioDAO;
+import br.com.securekeys.model.Usuario;
+import br.com.securekeys.views.formScreen.tableClasses.TableConfigurator;
+
 import java.awt.Font;
 
 /**
@@ -46,16 +50,27 @@ public class VisualizarUserDialog extends javax.swing.JDialog {
         jLabel4.setForeground(new java.awt.Color(102, 102, 102));
         jLabel4.setText("Usuários cadastrados");
 
-        jTableUsers.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jTableUsers.setFont(new java.awt.Font("Inter", 0, 24)); // NOI18N
-        jTableUsers.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+//        jTableUsers.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+//        jTableUsers.setFont(new java.awt.Font("Inter", 0, 24)); // NOI18N
+//        jTableUsers.setModel(new javax.swing.table.DefaultTableModel(
+//            new Object [][] {
+//
+//            },
+//            new String [] {
+//                "Username", "Nível de acesso", "Telefone", "Email"
+//            }
+//        ));
 
-            },
-            new String [] {
-                "Usermame", "Nível de acesso", "Telefone", "Email"
-            }
-        ));
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+
+        Usuario[] usuarios= usuarioDAO.getUserlist().toArray(new Usuario[0]);
+
+        TableConfigurator configurator = new TableConfigurator();
+
+        jTableUsers = configurator.tableConfigUsers(jTableUsers, usuarios, jScrollPane1);
+
+        jTableUsers = configurator.refreshUsers(jTableUsers, usuarios, jScrollPane1);
+
         jScrollPane1.setViewportView(jTableUsers);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);

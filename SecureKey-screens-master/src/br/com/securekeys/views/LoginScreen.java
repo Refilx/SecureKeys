@@ -5,6 +5,9 @@
 package br.com.securekeys.views;
 
 import br.com.securekeys.DAO.VerifyDAO;
+import br.com.securekeys.views.formScreen.LowercaseDocumentFilter;
+
+import javax.swing.text.AbstractDocument;
 
 /**
  *
@@ -133,6 +136,13 @@ public class LoginScreen extends javax.swing.JFrame {
                 jUsernameFieldKeyTyped(evt);
             }
         });
+
+        /**
+         * Obriga que campo UserName seja preenchido apenas com letras minúsculas
+         */
+        AbstractDocument doc = (AbstractDocument) jUsernameField.getDocument();
+        doc.setDocumentFilter(new LowercaseDocumentFilter());
+
         jPanel2.add(jUsernameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 160, 520, 60));
 
         btnLogin.setBackground(new java.awt.Color(0, 102, 0));

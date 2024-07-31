@@ -18,7 +18,7 @@ public class ChaveDAO {
      */
     public void save(Chave chave) {
 
-        String sql = "INSERT INTO chaves(numeroChave, sala, observacoes, quantChave, status) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO chaves(numeroChave, sala, observacoes, quantChave, status, bloco-predio) VALUES (?, ?, ?, ?, ?, ?)";
 
         Connection conn = null;
 
@@ -38,6 +38,7 @@ public class ChaveDAO {
             pstm.setString(3, chave.getObservacoes());
             pstm.setInt(4, chave.getQuantChave());
             pstm.setString(5, chave.getStatus());
+            pstm.setString(5, chave.getBloco());
 
             //Executa a Query
             pstm.execute();
@@ -94,6 +95,9 @@ public class ChaveDAO {
                 //Recupera a sala da chave
                 chave.setSala(rset.getString("sala"));
 
+                //Recupera o Bloco/Predio que pertence a chave
+                chave.setBloco(rset.getString("bloco-predio"));
+
                 //Recupera as observações da chave
                 chave.setObservacoes(rset.getString("observacoes"));
 
@@ -136,7 +140,7 @@ public class ChaveDAO {
      */
     public void update(Chave chave){
 
-        String sql = "UPDATE chaves SET numeroChave = ?, sala = ?, observacoes = ?, quantChave = ?, status = ? WHERE idChave = ?";
+        String sql = "UPDATE chaves SET numeroChave = ?, sala = ?, observacoes = ?, quantChave = ?, status = ?, bloco-predio = ? WHERE idChave = ?";
 
         Connection conn = null;
 
@@ -155,9 +159,10 @@ public class ChaveDAO {
             pstm.setString(3, chave.getObservacoes());
             pstm.setInt(4, chave.getQuantChave());
             pstm.setString(5, chave.getStatus());
+            pstm.setString(6, chave.getBloco());
 
             //Qual o ID do registro que deseja atualizar?
-            pstm.setInt(6, chave.getIdChave());
+            pstm.setInt(7, chave.getIdChave());
 
             //Executa a Query
             pstm.execute();

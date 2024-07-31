@@ -4,6 +4,10 @@
  */
 package br.com.securekeys.views.formScreen;
 
+import br.com.securekeys.DAO.ChaveDAO;
+import br.com.securekeys.model.Chave;
+import br.com.securekeys.views.formScreen.tableClasses.TableConfigurator;
+
 import java.awt.Cursor;
 import java.awt.Font;
 
@@ -19,7 +23,7 @@ public class VisualizarSalasDialog extends javax.swing.JDialog {
     public VisualizarSalasDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        jTableUsers.getTableHeader().setFont( new Font( "Arial" , Font.BOLD, 24 ));
+        jTableSalas.getTableHeader().setFont( new Font( "Arial" , Font.BOLD, 24 ));
         btnExportar.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
@@ -36,7 +40,7 @@ public class VisualizarSalasDialog extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         btnExportar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTableUsers = new javax.swing.JTable();
+        jTableSalas = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1712, 960));
@@ -50,22 +54,33 @@ public class VisualizarSalasDialog extends javax.swing.JDialog {
 
         btnExportar.setBackground(new java.awt.Color(204, 255, 204));
         btnExportar.setFont(new java.awt.Font("Inter", 1, 24)); // NOI18N
-        btnExportar.setIcon(new javax.swing.ImageIcon("/home/adimael/NetBeansProjects/securekey/src/icons/excel.png")); // NOI18N
+        btnExportar.setIcon(new javax.swing.ImageIcon(getClass().getClassLoader().getResource("br/com/securekeys/icons/excel.png"))); // NOI18N
         btnExportar.setText("Exportar");
         btnExportar.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         btnExportar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        jTableUsers.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jTableUsers.setFont(new java.awt.Font("Inter", 0, 24)); // NOI18N
-        jTableUsers.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+//        jTableSalas.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+//        jTableSalas.setFont(new java.awt.Font("Inter", 0, 24)); // NOI18N
+//        jTableSalas.setModel(new javax.swing.table.DefaultTableModel(
+//            new Object [][] {
+//
+//            },
+//            new String [] {
+//                "Sala", "Número da sala", "Bloco / Prédio", "Descrição"
+//            }
+//        ));
 
-            },
-            new String [] {
-                "Sala", "Número da sala", "Bloco / Prédio", "Descrição"
-            }
-        ));
-        jScrollPane1.setViewportView(jTableUsers);
+        ChaveDAO chaveDAO = new ChaveDAO();
+
+        Chave[] chaves = chaveDAO.getChave().toArray(new Chave[0]);
+
+        TableConfigurator configurator = new TableConfigurator();
+
+        jTableSalas = configurator.tableConfigSalas(jTableSalas, chaves, jScrollPane1);
+
+        jTableSalas = configurator.refreshSalas(jTableSalas, chaves, jScrollPane1);
+
+        jScrollPane1.setViewportView(jTableSalas);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -153,6 +168,6 @@ public class VisualizarSalasDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTableUsers;
+    private javax.swing.JTable jTableSalas;
     // End of variables declaration//GEN-END:variables
 }

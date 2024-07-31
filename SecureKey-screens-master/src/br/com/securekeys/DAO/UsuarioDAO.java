@@ -138,6 +138,75 @@ public class UsuarioDAO {
     }
 
     /**
+     * O método executa o SELECT no banco de dados
+     */
+    public List<Usuario> getUserlist(){
+
+        String sql = "SELECT * FROM usuarios_list";
+
+        List<Usuario> listaUsuario = new ArrayList<Usuario>();
+
+        Connection conn = null;
+
+        PreparedStatement pstm = null;
+
+        //Classe que vai recuperar os dados do banco. ***SELECT***
+        ResultSet rset = null;
+
+        try{
+            //Cria uma conexão com o banco de dados
+            conn = ConnectionFactory.createConnectionToMySQL();
+
+            //Cria uma PreparedStatement para executar uma Query
+            pstm = conn.prepareStatement(sql);
+
+            rset = pstm.executeQuery();
+
+            //Enquanto houver um próximo dado para ser armazenado pelo ResultSet, os comandos serão executados
+            while(rset.next()){
+                Usuario usuario = new Usuario();
+
+                //Recupera o username do usuário no banco de dados
+                usuario.setUsername(rset.getString("username"));
+
+                //Recupera a role do usuário no banco de dados
+                usuario.setRole(rset.getString("role"));
+
+                //Recupera o telefone do usuário no banco de dados
+                usuario.setTelefone(rset.getString("telefone"));
+
+                //Recupera o telefone do usuário no banco de dados
+                usuario.setEmail(rset.getString("email"));
+
+                //Adiciona o Usuário com todos os dados registrados à lista de Usuários
+                listaUsuario.add(usuario);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+
+            try{
+                //Fecha as conexões que foram abertas com o banco de dados
+                if(rset!=null){
+                    rset.close();
+                }
+
+                if(pstm!=null){
+                    pstm.close();
+                }
+
+                if(conn!=null){
+                    conn.close();
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return listaUsuario;
+    }
+
+    /**
      * O método executa o UPDATE no banco de dados
      * @param usuario
      */
