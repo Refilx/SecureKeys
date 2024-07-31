@@ -44,6 +44,7 @@ public class TableButtons extends TableConfigurator {
             }
             setText((value == null) ? "" : value.toString());
             return this;
+
         }
     }
 
@@ -127,9 +128,10 @@ public class TableButtons extends TableConfigurator {
 
                         refreshHistorico(table, listaAtualizada, jScrollPane);
 
-                    } else if(!dadosDaTable.getDataFechamento().toString().isBlank() && opcao == 0) {
+                    } else if(dadosDaTable.getDataFechamento() != null && opcao == 0) {
                         JOptionPane.showMessageDialog(null, "A chave já foi devolvida");
                     }
+
                 }
 
                 // Se o usuário apertar o botão de DELETE
@@ -149,6 +151,7 @@ public class TableButtons extends TableConfigurator {
                         refreshHistorico(table, listaPosDelete, jScrollPane);
 
                     }
+
                 }
             }
             isPushed = false;

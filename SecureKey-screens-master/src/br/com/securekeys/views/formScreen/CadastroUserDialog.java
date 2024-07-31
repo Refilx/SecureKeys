@@ -4,6 +4,7 @@
  */
 package br.com.securekeys.views.formScreen;
 
+import javax.swing.text.AbstractDocument;
 import java.awt.Cursor;
 
 /**
@@ -345,6 +346,13 @@ public class CadastroUserDialog extends javax.swing.JDialog {
                 jUsernameFieldKeyReleased(evt);
             }
         });
+
+        /**
+         * Obriga que campo UserName seja preenchido apenas com letras minúsculas
+         */
+        AbstractDocument doc = (AbstractDocument) jUsernameField.getDocument();
+        doc.setDocumentFilter(new LowercaseDocumentFilter());
+
         jPanel2.add(jUsernameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(327, 29, 520, 60));
 
         jLabel8.setFont(new java.awt.Font("Inter", 1, 24)); // NOI18N
