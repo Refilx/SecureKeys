@@ -6,6 +6,7 @@ import br.com.securekeys.model.Usuario;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 public class TableConfigurator {
@@ -39,11 +40,15 @@ public class TableConfigurator {
             jTable.setValueAt(images[1], i, 8);
 
         }
+        //Configuração que vai colorir o textos da coluna 4 dependendo do valor que estiver na celula
+        TableCellRenderer renderer = new ColoredCellRenderer();
+        jTable.getColumnModel().getColumn(4).setCellRenderer(renderer);
 
+        //Configuração que vai colocar as imagens dentro das celulas da coluna 7 para devolver a chave emprestada
         jTable.getColumnModel().getColumn(7).setCellRenderer(new ImageCellRenderer.ButtonRenderer());
         jTable.getColumnModel().getColumn(7).setCellEditor(new ImageCellRenderer.ButtonEditor(new JCheckBox(), jTable, jScrollPane));
 
-        // Botões de exluir o registro
+        //Configuração que vai colocar as imagens dentro das celulas da coluna 8 para excluir os registros
         jTable.getColumnModel().getColumn(8).setCellRenderer(new ImageCellRenderer.ButtonRenderer());
         jTable.getColumnModel().getColumn(8).setCellEditor(new ImageCellRenderer.ButtonEditor(new JCheckBox(), jTable, jScrollPane));
 
@@ -65,16 +70,24 @@ public class TableConfigurator {
         table.setModel(new DefaultTableModel(
                 new Object[array.length][9],
                 new String[]{
-                        "Nº da chave", "Nome da pessoa", "Cargo", "Observação", "Status", "Data de abertura", "Data de fechamento", "",""
-                }
-        ));
-        table.setColumnSelectionAllowed(true);
+                        "Nº da chave", "Pessoa", "Cargo", "Observação", "Status", "Data de abertura", "Data de fechamento", "",""
+                }){
+            boolean[] canEdit = new boolean[]{false, false, false, false, false, false, false, true, true};
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+
+        });
+        table.setCellSelectionEnabled(false);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getTableHeader().setResizingAllowed(false);
         jScrollPane.setViewportView(table);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setRowHeight(50);
-        table.getColumnModel().getColumn(0).setPreferredWidth(80);
+        table.getColumnModel().getColumn(0).setPreferredWidth(150);
         table.getColumnModel().getColumn(1).setPreferredWidth(200);
-        table.getColumnModel().getColumn(2).setPreferredWidth(170);
+        table.getColumnModel().getColumn(2).setPreferredWidth(160);
         table.getColumnModel().getColumn(3).setPreferredWidth(500);
         table.getColumnModel().getColumn(4).setPreferredWidth(150);
         table.getColumnModel().getColumn(5).setPreferredWidth(125);
@@ -135,12 +148,20 @@ public class TableConfigurator {
 
         table.setFont(new Font("Segoe UI", 1, 24)); // NOI18N
         table.setModel(new DefaultTableModel(
-                new Object[array.length][9],
+                new Object[array.length][4],
                 new String[]{
                         "Username", "Nível de acesso", "Telefone", "Email"
-                }
-        ));
-        table.setColumnSelectionAllowed(true);
+                }){
+            boolean[] canEdit = new boolean[]{false, false, false, false};
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+
+        });
+        table.setCellSelectionEnabled(false);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getTableHeader().setResizingAllowed(false);
         jScrollPane.setViewportView(table);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setRowHeight(50);
@@ -180,6 +201,10 @@ public class TableConfigurator {
 
         }
 
+        //Configuração que vai colorir o textos da coluna 4 dependendo do valor que estiver na celula
+        TableCellRenderer renderer = new ColoredCellRenderer();
+        jTable.getColumnModel().getColumn(4).setCellRenderer(renderer);
+
 //        jTable.getColumnModel().getColumn(7).setCellRenderer(new ImageCellRenderer.ButtonRenderer());
 //        jTable.getColumnModel().getColumn(7).setCellEditor(new ImageCellRenderer.ButtonEditor(new JCheckBox(), jTable, jScrollPane));
 //
@@ -203,12 +228,20 @@ public class TableConfigurator {
 
         table.setFont(new Font("Segoe UI", 1, 20)); // NOI18N
         table.setModel(new DefaultTableModel(
-                new Object[array.length][9],
+                new Object[array.length][6],
                 new String[]{
                         "Sala", "Número da chave", "Bloco / Prédio", "Chaves Disponíveis", "Status", "Descrição"
-                }
-        ));
-        table.setColumnSelectionAllowed(true);
+                }){
+            boolean[] canEdit = new boolean[]{false, false, false, false, false, false};
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+
+        });
+        table.setCellSelectionEnabled(false);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getTableHeader().setResizingAllowed(false);
         jScrollPane.setViewportView(table);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setRowHeight(50);

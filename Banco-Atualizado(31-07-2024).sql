@@ -42,7 +42,7 @@ CREATE TABLE `chaves` (
 
 LOCK TABLES `chaves` WRITE;
 /*!40000 ALTER TABLE `chaves` DISABLE KEYS */;
-INSERT INTO `chaves` VALUES (1,124,'LABORATÓRIO 124','MODULO NOVO','Chave Principal',0,'INDISPONIVEL'),(2,115,'LABORATÓRIO 115','MODULO NOVO','Chave Principal',2,'DISPONÍVEL'),(3,118,'LABORATÓRIO 118','MODULO NOVO','Chave Principal',1,'DISPONÍVEL');
+INSERT INTO `chaves` VALUES (1,124,'LABORATÓRIO 124','MODULO NOVO','Chave Principal',0,'INDISPONÍVEL'),(2,115,'LABORATÓRIO 115','MODULO NOVO','Chave Principal',2,'DISPONÍVEL'),(3,118,'LABORATÓRIO 118','MODULO NOVO','Chave Principal',1,'DISPONÍVEL');
 /*!40000 ALTER TABLE `chaves` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -96,7 +96,7 @@ CREATE TABLE `historico` (
 
 LOCK TABLES `historico` WRITE;
 /*!40000 ALTER TABLE `historico` DISABLE KEYS */;
-INSERT INTO `historico` VALUES (3,2,1,'O Estagiário pegou a chave do laboratório 115','ENCERRADO','2024-04-01','2024-04-01'),(4,3,1,'O Estagiário pegou a chave do laboratório 118','ENCERRADO','2024-05-01','2024-05-01'),(7,3,4,'A PM pegou a chave do laboratório 118','ENCERRADO','2024-04-01','2024-06-01'),(8,3,4,'A PM pegou a chave do laboratório 118','ENCERRADO','2024-04-01','2024-06-01'),(9,1,3,'O programador pegou a chave do laboratório 124','ENCERRADO','2024-06-17','2024-06-17'),(10,1,3,'O programador pegou a chave do laboratório 124','ENCERRADO','2024-06-17','2024-06-01'),(11,1,3,'O programador pegou a chave do laboratório 124','Em Aberto','2024-04-17',NULL);
+INSERT INTO `historico` VALUES (3,2,1,'O Estagiário pegou a chave do laboratório 115','ENCERRADO','2024-04-01','2024-04-01'),(4,3,1,'O Estagiário pegou a chave do laboratório 118','ENCERRADO','2024-05-01','2024-05-01'),(7,3,4,'A PM pegou a chave do laboratório 118','ENCERRADO','2024-04-01','2024-06-01'),(8,3,4,'A PM pegou a chave do laboratório 118','ENCERRADO','2024-04-01','2024-06-01'),(9,1,3,'O programador pegou a chave do laboratório 124','ENCERRADO','2024-06-17','2024-06-17'),(10,1,3,'O programador pegou a chave do laboratório 124','ENCERRADO','2024-06-17','2024-06-01'),(11,1,3,'O programador pegou a chave do laboratório 124','EM ABERTO','2024-04-17',NULL);
 /*!40000 ALTER TABLE `historico` ENABLE KEYS */;
 UNLOCK TABLES;
 
