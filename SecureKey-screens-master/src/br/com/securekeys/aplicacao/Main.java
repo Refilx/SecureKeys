@@ -8,6 +8,7 @@ import org.jasypt.util.password.PasswordEncryptor;
 
 import javax.security.auth.kerberos.EncryptionKey;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

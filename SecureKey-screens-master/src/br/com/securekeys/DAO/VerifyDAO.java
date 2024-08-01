@@ -86,9 +86,7 @@ public class VerifyDAO {
      */
     public boolean verifySuperUser() {
 
-        String sql = "SELECT L.idLogs, U.username, U.role FROM logs L \n" +
-                "JOIN usuario U ON (L.idUser = U.idUser) \n" +
-                "ORDER BY idLogs DESC limit 1";
+        String sql = "SELECT * FROM ultimo_logado";
 
         boolean resultadoVerify = false;
 
@@ -276,9 +274,8 @@ public class VerifyDAO {
 
                     //Armazenamos o idUser e a data do log no objeto log e salvamos no banco de dados
                     logs.setIdUser(usuario.getIdUser());
-                    logs.setDtLog(new java.util.Date());
 
-                    logsDAO.save(logs);
+                    logsDAO.saveLogin(logs);
 
                     resultadoValidacao = true;
 //                        break;

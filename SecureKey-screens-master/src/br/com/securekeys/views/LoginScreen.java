@@ -63,7 +63,7 @@ public class LoginScreen extends javax.swing.JFrame {
         jLabelSecureKey.setText("SecureKey");
         bg.add(jLabelSecureKey, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 50, -1, -1));
 
-        jLabelicon.setIcon(new javax.swing.ImageIcon(getClass().getClassLoader().getResource("br/com/securekeys/icons/image3.png"))); // NOI18N
+        jLabelicon.setIcon(new javax.swing.ImageIcon(getClass().getClassLoader().getResource("br/com/securekeys/icons/image 3.png"))); // NOI18N
         bg.add(jLabelicon, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 60, -1, -1));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -156,6 +156,11 @@ public class LoginScreen extends javax.swing.JFrame {
                 btnLoginMouseClicked(evt);
             }
         });
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 400, 250, 60));
 
         jLabelSubTitle.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
@@ -231,6 +236,37 @@ public class LoginScreen extends javax.swing.JFrame {
             placeHolderPass.setEnabled(false);
         }
     }//GEN-LAST:event_jPasswordField1KeyReleased
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        // TODO add your handling code here:
+
+        //Pegamos o conteúdo do campo username da tela de login e armazenamos na variável user
+        String user = jUsernameField.getText();
+
+        //Inicializamos a String que pegará o valor do campo password da tela de login
+        String pass = "";
+
+        //Pegamos o conteúdo do campo password e armazenamos na variável cadaCaractere,
+        //para depois passarmos os caracteres para a variável pass
+        char[] cadaCaractere = jPasswordField1.getPassword();
+
+        //O JPasswordField inputSenha.getPassword retorna uma array tipo char, e para armazenar os caracteres em uma string,
+        //foi necessária a construção do seguinte FOR
+        for(int i=0; i < jPasswordField1.getPassword().length; i++){
+            if(jPasswordField1.getPassword().length>0){
+                pass = pass + cadaCaractere[i];
+            }
+        }
+
+        Login login = new Login();
+
+        resultVerify = login.resultVerify(user, pass);
+
+        if(resultVerify){
+
+            btnLoginMouseClicked(null);
+        }
+    }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoginMouseClicked
         // TODO add your handling code here:

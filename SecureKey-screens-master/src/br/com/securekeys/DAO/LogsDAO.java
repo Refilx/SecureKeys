@@ -1,25 +1,22 @@
 package br.com.securekeys.DAO;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.securekeys.factory.ConnectionFactory;
 import br.com.securekeys.model.Logs;
-import br.com.securekeys.model.Usuario;
-import org.jasypt.util.password.BasicPasswordEncryptor;
 
 public class LogsDAO {
 
     /**
      * O método executa o INSERT no banco de dados
      */
-    public void save(Logs logs) {
+    public void saveLogin(Logs logs) {
 
-        String sql = "INSERT INTO logs(idUser, dtLogs) VALUES (?, ?)";
+        String sql = "INSERT INTO logs(idUser, dtLogin) VALUES (?, ?)";
+
+        logs.setDtLogin(new Timestamp(System.currentTimeMillis()));
 
         Connection conn = null;
 
@@ -34,7 +31,53 @@ public class LogsDAO {
 
             //Adicionar os valores que são esperados pela Query
             pstm.setInt(1, logs.getIdUser());
-            pstm.setDate(2, new Date(logs.getDtLog().getTime()));
+            pstm.setTimestamp(2, logs.getDtLogin());
+
+            //Executa a Query
+            pstm.execute();
+
+        }catch(Exception e) {
+            e.printStackTrace();
+        }finally{
+
+            //Fecha as conexões que foram abertas com o banco de dados
+            try{
+                if(pstm!=null){
+                    pstm.close();
+                }
+
+                if(conn!=null){
+                    conn.close();
+                }
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * O método executa o INSERT no banco de dados
+     */
+    public void saveLogout(Logs logs) {
+
+        String sql = "UPDATE logs SET dtLogout = ? WHERE idLogs = ?;";
+
+        logs.setDtLogout(new Timestamp(System.currentTimeMillis()));
+
+        Connection conn = null;
+
+        PreparedStatement pstm = null;
+
+        try{
+            //Cria conexão com o banco
+            conn = ConnectionFactory.createConnectionToMySQL();
+
+            //Criamos uma PreparedStatement para executar uma query
+            pstm = conn.prepareStatement(sql);
+
+            //Adicionar os valores que são esperados pela Query
+            pstm.setTimestamp(1, logs.getDtLogout());
+            pstm.setInt(2, logs.getIdLogs());
 
             //Executa a Query
             pstm.execute();
@@ -97,8 +140,11 @@ public class LogsDAO {
                 //Recupera o username da consulta
                 logs.setUsername(rset.getString("username"));
 
-                //Recupera a data do logs
-                logs.setDtLog(rset.getDate("dtLogs"));
+                //Recupera a data do login
+               logs.setDtLogin(rset.getTimestamp("dtLogin"));
+
+                //Recupera a data do logout
+                logs.setDtLogout(rset.getTimestamp("dtLogout"));
 
                 //Adiciona a logs com todos os dados registrados à lista de chaves
                 listaLogs.add(logs);
@@ -231,5 +277,59 @@ public class LogsDAO {
      * O primeiro vai registrar o login do usuário ao realizar o login
      * O segundo vai registrar o logout do usuário ao sair
      */
+
+    //O método executa o READ no banco de dados
+    public Logs getUltimoLogado() {
+        String sql = "SELECT idLogs FROM ultimo_logado;";
+
+        //Lista que armazenará os dados de logs
+        Logs logs = new Logs();
+
+        Connection conn = null;
+
+        PreparedStatement pstm = null;
+
+        // Classe que vai recuperar os dados do banco.  *** SELECT ***
+        ResultSet rset = null;
+
+        try{
+            //Cria a conexão com o banco de dados
+            conn = ConnectionFactory.createConnectionToMySQL();
+
+            //Criamos uma PreparedStatement para executar uma query
+            pstm = conn.prepareStatement(sql);
+
+            rset = pstm.executeQuery();
+
+            //Enquanto houver um próximo dado para ser armazenado pelo ResultSet, os comandos serão executados
+            while(rset.next()){
+
+                //Recupera o idLogs da logs
+                logs.setIdLogs(rset.getInt("idLogs"));
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+
+            try{
+                //Fecha as conexões que foram abertas com o banco de dados
+                if(rset!=null){
+                    rset.close();
+                }
+
+                if(pstm!=null){
+                    pstm.close();
+                }
+
+                if(conn!=null){
+                    conn.close();
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return logs;
+    }
 
 }

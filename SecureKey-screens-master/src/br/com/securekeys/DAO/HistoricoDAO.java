@@ -170,7 +170,7 @@ public class HistoricoDAO {
      */
     public List<Historico> getHistorico(){
 
-        String sql = "SELECT * FROM consultahistorico";
+        String sql = "SELECT * FROM consulta_historico";
 
         List<Historico> listaHistorico = new ArrayList<Historico>();
 

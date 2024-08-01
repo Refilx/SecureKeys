@@ -1,5 +1,7 @@
 package br.com.securekeys.model;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Logs{
@@ -7,7 +9,8 @@ public class Logs{
     private int IdLogs;
     private int IdUser;
     private String username;
-    private Date DtLog;
+    private Timestamp DtLogin;
+    private Timestamp DtLogout;
 
     public Logs() {}
 
@@ -36,11 +39,19 @@ public class Logs{
         return username;
     }
 
-    public void setDtLog(Date dtLog) {
-        DtLog = dtLog;
+    public void setDtLogin(Timestamp dtLogin) {
+        DtLogin = dtLogin;
     }
 
-    public Date getDtLog() {
-        return DtLog;
+    public Timestamp getDtLogin() {
+        return DtLogin;
+    }
+
+    public void setDtLogout(Timestamp dtLogout) {
+        DtLogout = dtLogout;
+    }
+
+    public Timestamp getDtLogout() {
+        return DtLogout;
     }
 }
