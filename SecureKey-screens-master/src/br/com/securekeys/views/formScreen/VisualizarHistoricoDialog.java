@@ -6,6 +6,7 @@ package br.com.securekeys.views.formScreen;
 
 import br.com.securekeys.DAO.HistoricoDAO;
 import br.com.securekeys.model.Historico;
+import br.com.securekeys.views.formScreen.tableClasses.JTableToExcel;
 import br.com.securekeys.views.formScreen.tableClasses.TableConfigurator;
 
 import java.awt.Cursor;
@@ -84,6 +85,11 @@ public class VisualizarHistoricoDialog extends javax.swing.JDialog {
         btnExportar.setText("Exportar");
         btnExportar.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         btnExportar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnExportar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                new JTableToExcel(jTableHistorico);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

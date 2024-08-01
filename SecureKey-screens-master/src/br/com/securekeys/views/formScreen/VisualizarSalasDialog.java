@@ -6,6 +6,7 @@ package br.com.securekeys.views.formScreen;
 
 import br.com.securekeys.DAO.ChaveDAO;
 import br.com.securekeys.model.Chave;
+import br.com.securekeys.views.formScreen.tableClasses.JTableToExcel;
 import br.com.securekeys.views.formScreen.tableClasses.TableConfigurator;
 
 import java.awt.Cursor;
@@ -58,6 +59,11 @@ public class VisualizarSalasDialog extends javax.swing.JDialog {
         btnExportar.setText("Exportar");
         btnExportar.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         btnExportar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnExportar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                new JTableToExcel(jTableSalas);
+            }
+        });
 
 //        jTableSalas.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 //        jTableSalas.setFont(new java.awt.Font("Inter", 0, 24)); // NOI18N
