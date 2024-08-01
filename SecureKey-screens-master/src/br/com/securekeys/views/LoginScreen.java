@@ -4,6 +4,7 @@
  */
 package br.com.securekeys.views;
 
+import br.com.securekeys.DAO.LogsDAO;
 import br.com.securekeys.DAO.VerifyDAO;
 import br.com.securekeys.views.formScreen.LowercaseDocumentFilter;
 
@@ -242,6 +243,7 @@ public class LoginScreen extends javax.swing.JFrame {
         if(verifyDAO.verifySuperUser()){
             br.com.securekeys.views.DashboardScreen dashboardSuper = new br.com.securekeys.views.DashboardScreen();
             dashboardSuper.setVisible(true);
+
         }
         else if(!verifyDAO.verifySuperUser()){
             br.com.securekeys.views.UserComum.DashboardScreen dashboardComum = new br.com.securekeys.views.UserComum.DashboardScreen();

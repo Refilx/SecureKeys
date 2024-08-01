@@ -226,6 +226,10 @@ public class LogsDAO {
         }
     }
 
-
+    /**
+     * Criar método loginRegister e logoutRegister na LogsDAO
+     * O primeiro vai registrar o login do usuário ao realizar o login
+     * O segundo vai registrar o logout do usuário ao sair
+     */
 
 }

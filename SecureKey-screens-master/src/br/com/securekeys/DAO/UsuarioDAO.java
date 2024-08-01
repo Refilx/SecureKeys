@@ -142,7 +142,7 @@ public class UsuarioDAO {
      */
     public List<Usuario> getUserlist(){
 
-        String sql = "SELECT * FROM usuarios_list";
+        String sql = "SELECT * FROM usuario_list";
 
         List<Usuario> listaUsuario = new ArrayList<Usuario>();
 

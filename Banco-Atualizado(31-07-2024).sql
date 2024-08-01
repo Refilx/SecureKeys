@@ -28,7 +28,7 @@ CREATE TABLE `chaves` (
   `idChave` int NOT NULL AUTO_INCREMENT,
   `numeroChave` int NOT NULL,
   `sala` varchar(60) DEFAULT NULL,
-  `bloco-predio` varchar(60) DEFAULT NULL,
+  `bloco_predio` varchar(60) DEFAULT NULL,
   `observacoes` varchar(60) DEFAULT NULL,
   `quantChave` int NOT NULL,
   `status` varchar(30) DEFAULT NULL,
@@ -85,8 +85,8 @@ CREATE TABLE `historico` (
   PRIMARY KEY (`idHistorico`),
   KEY `idPessoa` (`idPessoa`),
   KEY `idChave` (`idChave`),
-  CONSTRAINT `historico_ibfk_1` FOREIGN KEY (`idPessoa`) REFERENCES `pessoa` (`idPessoa`),
-  CONSTRAINT `historico_ibfk_2` FOREIGN KEY (`idChave`) REFERENCES `chaves` (`idChave`)
+  CONSTRAINT `historico_chave` FOREIGN KEY (`idChave`) REFERENCES `chaves` (`idChave`),
+  CONSTRAINT `historico_pessoa` FOREIGN KEY (`idPessoa`) REFERENCES `pessoa` (`idPessoa`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -96,7 +96,7 @@ CREATE TABLE `historico` (
 
 LOCK TABLES `historico` WRITE;
 /*!40000 ALTER TABLE `historico` DISABLE KEYS */;
-INSERT INTO `historico` VALUES (3,2,1,'O Estagiário pegou a chave do laboratório 115','ENCERRADO','2024-04-01','2024-04-01'),(4,3,1,'O Estagiário pegou a chave do laboratório 118','ENCERRADO','2024-05-01','2024-05-01'),(7,3,4,'A PM pegou a chave do laboratório 118','ENCERRADO','2024-04-01','2024-06-01'),(8,3,4,'A PM pegou a chave do laboratório 118','Em Aberto','2024-04-01','2024-06-01'),(9,1,3,'O programador pegou a chave do laboratório 124','ENCERRADO','2024-06-17','2024-06-17'),(10,1,3,'O programador pegou a chave do laboratório 124','Em Aberto','2024-06-17','2024-06-01'),(11,1,3,'O programador pegou a chave do laboratório 124','Em Aberto','2024-04-17',null);
+INSERT INTO `historico` VALUES (3,2,1,'O Estagiário pegou a chave do laboratório 115','ENCERRADO','2024-04-01','2024-04-01'),(4,3,1,'O Estagiário pegou a chave do laboratório 118','ENCERRADO','2024-05-01','2024-05-01'),(7,3,4,'A PM pegou a chave do laboratório 118','ENCERRADO','2024-04-01','2024-06-01'),(8,3,4,'A PM pegou a chave do laboratório 118','ENCERRADO','2024-04-01','2024-06-01'),(9,1,3,'O programador pegou a chave do laboratório 124','ENCERRADO','2024-06-17','2024-06-17'),(10,1,3,'O programador pegou a chave do laboratório 124','ENCERRADO','2024-06-17','2024-06-01'),(11,1,3,'O programador pegou a chave do laboratório 124','Em Aberto','2024-04-17',NULL);
 /*!40000 ALTER TABLE `historico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -122,12 +122,9 @@ DROP TABLE IF EXISTS `logs`;
 CREATE TABLE `logs` (
   `idLogs` int NOT NULL AUTO_INCREMENT,
   `idUser` int NOT NULL,
-  `idPessoa` int NOT NULL,
   `dtLogs` date NOT NULL,
   PRIMARY KEY (`idLogs`),
   KEY `idUser` (`idUser`),
-  KEY `idPessoa` (`idPessoa`),
-  CONSTRAINT `logs_pessoa` FOREIGN KEY (`idPessoa`) REFERENCES `pessoa` (`idPessoa`),
   CONSTRAINT `logs_user` FOREIGN KEY (`idUser`) REFERENCES `usuario` (`idUser`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -138,7 +135,7 @@ CREATE TABLE `logs` (
 
 LOCK TABLES `logs` WRITE;
 /*!40000 ALTER TABLE `logs` DISABLE KEYS */;
-INSERT INTO `logs` VALUES (2,3,3,'2024-04-01'),(3,2,2,'2024-04-01');
+INSERT INTO `logs` VALUES (2,3,'2024-04-01'),(3,2,'2024-04-01');
 /*!40000 ALTER TABLE `logs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -189,8 +186,11 @@ CREATE TABLE `usuario` (
   `password` varchar(240) NOT NULL,
   `role` varchar(30) NOT NULL,
   `dtRegistro` date NOT NULL,
+  `idPessoa` int NOT NULL,
   PRIMARY KEY (`idUser`),
-  UNIQUE KEY `username` (`username`)
+  UNIQUE KEY `username` (`username`),
+  KEY `idPessoa` (`idPessoa`),
+  CONSTRAINT `user_pessoa` FOREIGN KEY (`idPessoa`) REFERENCES `pessoa` (`idPessoa`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -200,19 +200,19 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'Adimael','Os2gA1bJddTrEVXNmcmUiPkArtToBCTC','ADMINISTRADOR','2024-04-01'),(2,'Bruno','GdV53nA9YjMVN49U2wy+MxcVjhebV4dm','ADMINISTRADOR','2024-04-01'),(3,'Geovanna','5KgZSULSp02JBKmcWUQdu7Vw+Zr4PDZr','ADMINISTRADOR','2024-04-01');
+INSERT INTO `usuario` VALUES (1,'Adimael','Os2gA1bJddTrEVXNmcmUiPkArtToBCTC','ADMINISTRADOR','2024-04-01',1),(2,'Bruno','GdV53nA9YjMVN49U2wy+MxcVjhebV4dm','ADMINISTRADOR','2024-04-01',2),(3,'Geovanna','5KgZSULSp02JBKmcWUQdu7Vw+Zr4PDZr','ADMINISTRADOR','2024-04-01',3);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Temporary view structure for view `usuarios_list`
+-- Temporary view structure for view `usuario_list`
 --
 
-DROP TABLE IF EXISTS `usuarios_list`;
-/*!50001 DROP VIEW IF EXISTS `usuarios_list`*/;
+DROP TABLE IF EXISTS `usuario_list`;
+/*!50001 DROP VIEW IF EXISTS `usuario_list`*/;
 SET @saved_cs_client     = @@character_set_client;
 /*!50503 SET character_set_client = utf8mb4 */;
-/*!50001 CREATE VIEW `usuarios_list` AS SELECT 
+/*!50001 CREATE VIEW `usuario_list` AS SELECT 
  1 AS `username`,
  1 AS `role`,
  1 AS `telefone`,
@@ -264,10 +264,10 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
--- Final view structure for view `usuarios_list`
+-- Final view structure for view `usuario_list`
 --
 
-/*!50001 DROP VIEW IF EXISTS `usuarios_list`*/;
+/*!50001 DROP VIEW IF EXISTS `usuario_list`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
@@ -276,7 +276,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `usuarios_list` AS select distinct `u`.`username` AS `username`,`u`.`role` AS `role`,`p`.`telefone` AS `telefone`,`p`.`email` AS `email` from ((`logs` `l` join `pessoa` `p` on((`p`.`idPessoa` = `l`.`idPessoa`))) join `usuario` `u` on((`u`.`idUser` = `l`.`idUser`))) */;
+/*!50001 VIEW `usuario_list` AS select `u`.`username` AS `username`,`u`.`role` AS `role`,`p`.`telefone` AS `telefone`,`p`.`email` AS `email` from (`usuario` `u` join `pessoa` `p` on((`p`.`idPessoa` = `u`.`idPessoa`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -290,4 +290,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-31 16:59:35
+-- Dump completed on 2024-07-31 21:55:26

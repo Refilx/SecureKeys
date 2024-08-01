@@ -18,7 +18,7 @@ public class ChaveDAO {
      */
     public void save(Chave chave) {
 
-        String sql = "INSERT INTO chaves(numeroChave, sala, observacoes, quantChave, status, bloco-predio) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO chaves(numeroChave, sala, observacoes, quantChave, status, bloco_predio) VALUES (?, ?, ?, ?, ?, ?)";
 
         Connection conn = null;
 
@@ -38,7 +38,7 @@ public class ChaveDAO {
             pstm.setString(3, chave.getObservacoes());
             pstm.setInt(4, chave.getQuantChave());
             pstm.setString(5, chave.getStatus());
-            pstm.setString(5, chave.getBloco());
+            pstm.setString(6, chave.getBloco());
 
             //Executa a Query
             pstm.execute();
@@ -96,7 +96,7 @@ public class ChaveDAO {
                 chave.setSala(rset.getString("sala"));
 
                 //Recupera o Bloco/Predio que pertence a chave
-                chave.setBloco(rset.getString("bloco-predio"));
+                chave.setBloco(rset.getString("bloco_predio"));
 
                 //Recupera as observações da chave
                 chave.setObservacoes(rset.getString("observacoes"));

@@ -11,7 +11,7 @@ import java.util.Date;
 
 public class AddUser{
 
-    private boolean resultado = false;
+    private boolean result = false;
 
     public AddUser(
             String nome,
@@ -83,32 +83,32 @@ public class AddUser{
                     //
                     JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 
-                    resultado = true;
+                    result = true;
 
                 }
                 else{
                     //
                     JOptionPane.showMessageDialog(null, "Já existe um usuário com esse username cadastrado\n Digite um username diferente, por favor",
                             "Erro tentar realizar cadastro", JOptionPane.WARNING_MESSAGE);
-                    resultado = false;
+                    result = false;
                 }
             }
             else{
                 //
                 JOptionPane.showMessageDialog(null, "Já existe um usuário com esse CPF cadastrado\n Use um CPF diferente, por favor",
                         "Erro tentar realizar cadastro", JOptionPane.WARNING_MESSAGE);
-                resultado = false;
+                result = false;
             }
         }
         else{
             //
             JOptionPane.showMessageDialog(null, "Por favor, preecha todos os campos!!!",
                     "Erro ao tentar realizar cadastro", JOptionPane.WARNING_MESSAGE);
-            resultado = false;
+            result = false;
         }
     };
 
     public boolean cadastroResult(){
-        return resultado;
+        return result;
     }
 }

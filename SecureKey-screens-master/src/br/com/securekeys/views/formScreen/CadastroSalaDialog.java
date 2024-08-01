@@ -4,6 +4,7 @@
  */
 package br.com.securekeys.views.formScreen;
 
+import javax.swing.*;
 import java.awt.Cursor;
 
 /**
@@ -198,6 +199,11 @@ public class CadastroSalaDialog extends javax.swing.JDialog {
         btnCadastrar.setMaximumSize(new java.awt.Dimension(1290, 760));
         btnCadastrar.setMinimumSize(new java.awt.Dimension(1290, 760));
         jPanel1.add(btnCadastrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1380, 750, 170, 60));
+        btnCadastrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCadastrarMouseClicked(evt);
+            }
+        });
 
         btnCancelar.setBackground(new java.awt.Color(255, 153, 153));
         btnCancelar.setFont(new java.awt.Font("Inter", 1, 18)); // NOI18N
@@ -205,6 +211,11 @@ public class CadastroSalaDialog extends javax.swing.JDialog {
         btnCancelar.setText("Cancelar");
         btnCancelar.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanel1.add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 750, 190, 60));
+        btnCancelar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCancelarMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -291,6 +302,42 @@ public class CadastroSalaDialog extends javax.swing.JDialog {
     private void jChaveReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jChaveReservaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jChaveReservaActionPerformed
+
+    private void btnCadastrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseClicked
+        // TODO add your handling code here:
+
+        boolean result = false;
+
+        try {
+            //
+            String nome = jNomeField.getText();
+            int numeroChave = Integer.parseInt(jNumeroField.getText());
+            String bloco = jBlocoField.getText();
+            String descricao = jDescricaoField.getText();
+            String opcao = jChaveReserva.getSelectedItem().toString();
+
+            //
+            result = new AddSala(nome, numeroChave, bloco, descricao, opcao).cadastroResult();
+
+        }catch (NumberFormatException e){
+            JOptionPane.showMessageDialog(null, "O valor preenchido no campo de número não é válido");
+        }
+
+        //
+        if(result){
+            jNomeField.setText(null);
+            jNumeroField.setText(null);
+            jBlocoField.setText(null);
+            jDescricaoField.setText(null);
+            jChaveReserva.setSelectedIndex(0);
+        }
+
+    }//GEN-LAST:event_btnCancelarMouseClicked
+
+    private void btnCancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseClicked
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_btnCancelarMouseClicked
 
     /**
      * @param args the command line arguments
