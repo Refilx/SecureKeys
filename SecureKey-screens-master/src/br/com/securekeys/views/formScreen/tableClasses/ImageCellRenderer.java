@@ -3,6 +3,7 @@ package br.com.securekeys.views.formScreen.tableClasses;
 import br.com.securekeys.DAO.ChaveDAO;
 import br.com.securekeys.DAO.HistoricoDAO;
 import br.com.securekeys.model.Historico;
+import br.com.securekeys.views.formScreen.EmprestimoScreen;
 
 import javax.swing.table.TableCellRenderer;
 
@@ -70,6 +71,8 @@ public class ImageCellRenderer extends TableConfigurator {
 
         private boolean isPushed;
 
+        int row;
+
         JTable table = new JTable();
         JScrollPane jScrollPane = new JScrollPane();
 
@@ -98,6 +101,8 @@ public class ImageCellRenderer extends TableConfigurator {
             }
 
             Historico[] listaAtualizada = historicoDAO.getHistorico().toArray(new Historico[0]);
+
+            this.row = row;
 
             //
             dadosDaTable.setIdHistorico(listaAtualizada[row].getIdHistorico());
@@ -169,6 +174,24 @@ public class ImageCellRenderer extends TableConfigurator {
                         return buttonTeste.getIcon();
                     }
 
+                }
+
+                if(numeroColuna == 9 && row == 0){
+                    EmprestimoScreen emprestimoScreen = new EmprestimoScreen(null, true);
+                    emprestimoScreen.setVisible(true);
+
+                    boolean valor = emprestimoScreen.finalizado();
+
+                    if(valor){
+                        Historico[] listaPosInsert = historicoDAO.getHistorico().toArray(new Historico[0]);
+
+                        table = tableConfigHistorico(table, listaPosInsert, jScrollPane);
+
+                        refreshHistorico(table, listaPosInsert, jScrollPane);
+                    }
+                    else{
+                        return buttonTeste.getIcon();
+                    }
                 }
             }
             isPushed = false;

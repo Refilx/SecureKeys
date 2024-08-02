@@ -89,6 +89,9 @@ public class ChaveDAO {
             while(rset.next()){
                 Chave chave = new Chave();
 
+                //Recupera o id da chave
+                chave.setIdChave(rset.getInt("idChave"));
+
                 //Recupera o número da chave
                 chave.setNumeroChave(rset.getInt("numeroChave"));
 

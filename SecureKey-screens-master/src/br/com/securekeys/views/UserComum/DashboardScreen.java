@@ -4,13 +4,16 @@
  */
 package br.com.securekeys.views.UserComum;
 
+import br.com.securekeys.DAO.LogsDAO;
+import br.com.securekeys.model.Logs;
 import br.com.securekeys.views.*;
 import br.com.securekeys.views.formScreen.VisualizarHistoricoDialog;
 import br.com.securekeys.views.formScreen.CadastroUserDialog;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.net.URL;
-import javax.swing.ImageIcon;
+import javax.swing.*;
+
 import br.com.securekeys.views.formScreen.CadastroSalaDialog;
 import br.com.securekeys.views.formScreen.VisualizarSalasDialog;
 import br.com.securekeys.views.formScreen.VisualizarUserDialog;
@@ -93,8 +96,10 @@ public class DashboardScreen extends javax.swing.JFrame {
         } else {
             System.out.println("Icone Menu do usuário não foi encontrado!");
         }
-        
 
+        LogsDAO logsDAO = new LogsDAO();
+
+        logDoUsuario = logsDAO.getUltimoLogado();
     }
 
     /**
@@ -543,6 +548,9 @@ public class DashboardScreen extends javax.swing.JFrame {
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 itemSairMouseExited(evt);
             }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                itemSairMouseClicked(evt);
+            }
         });
 
         txtSair.setFont(new java.awt.Font("Inter", 1, 20)); // NOI18N
@@ -803,6 +811,24 @@ public class DashboardScreen extends javax.swing.JFrame {
         txtSeta3.setIcon(downArrowIcon);
     }//GEN-LAST:event_itemSairMouseExited
 
+    private void itemSairMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseClicked
+        // TODO add your handling code here:
+
+        int opcao = JOptionPane.showOptionDialog(null, "Tem certeza que deseja sair?", "Confirmação",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"Sim", "Não"}, null);
+
+        //Se o usuário selecionar a opção "Sim", a aplicação irá fechar a tela de dashboard e voltar para a tela de login
+        if(opcao == 0){
+            LogsDAO logsDAO = new LogsDAO();
+            logsDAO.saveLogout(logDoUsuario);
+
+            this.dispose();
+
+            LoginScreen loginScreen = new LoginScreen();
+            loginScreen.setVisible(true);
+        }
+    }//GEN-LAST:event_btnCancelarMouseClicked
+
     private void btnMenuUserMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMenuUserMouseExited
 
     }//GEN-LAST:event_btnMenuUserMouseExited
@@ -911,5 +937,7 @@ public class DashboardScreen extends javax.swing.JFrame {
     private javax.swing.JLabel txtSeta3;
     private javax.swing.JLabel txtSuporte;
     private javax.swing.JLabel txtVisualizarSala;
+
+    private Logs logDoUsuario;
     // End of variables declaration//GEN-END:variables
 }

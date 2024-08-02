@@ -23,7 +23,8 @@ public class TableConfigurator {
     public static JTable refreshHistorico(JTable jTable, Historico[] array, JScrollPane jScrollPane){
 
         Object[] images = {new ImageIcon(TableConfigurator.class.getClassLoader().getResource("br/com/securekeys/icons/key.png")),
-                new ImageIcon(TableConfigurator.class.getClassLoader().getResource("br/com/securekeys/icons/delete.png"))};
+                new ImageIcon(TableConfigurator.class.getClassLoader().getResource("br/com/securekeys/icons/delete.png")),
+                new ImageIcon(TableConfigurator.class.getClassLoader().getResource("br/com/securekeys/icons/add.png"))};
 
         for(int i = 0; i < array.length; i++){
             jTable.setValueAt(array[i].getNumeroChave(), i, 0);
@@ -38,6 +39,10 @@ public class TableConfigurator {
 
             jTable.setValueAt(images[0], i, 7);
             jTable.setValueAt(images[1], i, 8);
+            if(i == 0){
+                jTable.setValueAt(images[2], i, 9);
+
+            }
 
         }
         //Configuração que vai colorir o textos da coluna 4 dependendo do valor que estiver na celula
@@ -51,6 +56,10 @@ public class TableConfigurator {
         //Configuração que vai colocar as imagens dentro das celulas da coluna 8 para excluir os registros
         jTable.getColumnModel().getColumn(8).setCellRenderer(new ImageCellRenderer.ButtonRenderer());
         jTable.getColumnModel().getColumn(8).setCellEditor(new ImageCellRenderer.ButtonEditor(new JCheckBox(), jTable, jScrollPane));
+
+        //Configuração que vai colocar as imagens dentro das celulas da coluna 9 para excluir os registros
+        jTable.getColumnModel().getColumn(9).setCellRenderer(new ImageCellRenderer.ButtonRenderer());
+        jTable.getColumnModel().getColumn(9).setCellEditor(new ImageCellRenderer.ButtonEditor(new JCheckBox(), jTable, jScrollPane));
 
         return jTable;
     }
@@ -70,9 +79,9 @@ public class TableConfigurator {
         table.setModel(new DefaultTableModel(
                 new Object[array.length][9],
                 new String[]{
-                        "Nº da chave", "Pessoa", "Cargo", "Observação", "Status", "Data de abertura", "Data de fechamento", "",""
+                        "Nº da chave", "Pessoa", "Cargo", "Observação", "Status", "Data de abertura", "Data de fechamento", "","", ""
                 }){
-            boolean[] canEdit = new boolean[]{false, false, false, false, false, false, false, true, true};
+            boolean[] canEdit = new boolean[]{false, false, false, false, false, false, false, true, true, true};
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit[columnIndex];
@@ -86,13 +95,14 @@ public class TableConfigurator {
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setRowHeight(50);
         table.getColumnModel().getColumn(0).setPreferredWidth(150);
-        table.getColumnModel().getColumn(1).setPreferredWidth(200);
+        table.getColumnModel().getColumn(1).setPreferredWidth(150);
         table.getColumnModel().getColumn(2).setPreferredWidth(160);
-        table.getColumnModel().getColumn(3).setPreferredWidth(500);
+        table.getColumnModel().getColumn(3).setPreferredWidth(450);
         table.getColumnModel().getColumn(4).setPreferredWidth(150);
         table.getColumnModel().getColumn(5).setPreferredWidth(125);
         table.getColumnModel().getColumn(6).setPreferredWidth(125);
         table.getColumnModel().getColumn(7).setPreferredWidth(60);
+        table.getColumnModel().getColumn(8).setPreferredWidth(60);
         table.getColumnModel().getColumn(8).setPreferredWidth(60);
 
         return table;

@@ -29,7 +29,7 @@ public class JTableToExcel extends JFrame {
 
             int column;
 
-            if(table.getColumnCount() == 9) {
+            if(table.getColumnCount() == 10) {
                 column = 7;
             }
             else{
