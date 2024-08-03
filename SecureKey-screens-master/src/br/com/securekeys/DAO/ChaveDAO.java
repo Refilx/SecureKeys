@@ -345,7 +345,7 @@ public class ChaveDAO {
      */
     public void devolverChave(Historico historico){
 
-        String sqlUpdate = "UPDATE chaves SET quantChave = quantChave + 1, status = 'DISPONIVEL' WHERE idChave = ?";
+        String sqlUpdate = "UPDATE chaves SET quantChave = quantChave + 1, status = 'DISPONÍVEL' WHERE idChave = ?";
 
         Connection connUpdate = null;
 

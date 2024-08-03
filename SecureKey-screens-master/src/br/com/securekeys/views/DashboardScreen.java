@@ -113,10 +113,7 @@ public class DashboardScreen extends javax.swing.JFrame {
         } else {
             System.out.println("Icone Menu do usuário não foi encontrado!");
         }
-        
-        LogsDAO logsDAO = new LogsDAO();
 
-        logDoUsuario = logsDAO.getUltimoLogado();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -301,7 +298,7 @@ public class DashboardScreen extends javax.swing.JFrame {
 
         txtNomeUser.setFont(new java.awt.Font("Inter", 0, 20)); // NOI18N
         txtNomeUser.setIcon(new javax.swing.ImageIcon(getClass().getClassLoader().getResource("br/com/securekeys/icons/man_4140037.png"))); // NOI18N
-        txtNomeUser.setText("fulano.silva");
+        txtNomeUser.setText(logDoUsuario.getUsername());
 
         txtSeta3.setIcon(new javax.swing.ImageIcon(getClass().getClassLoader().getResource("br/com/securekeys/icons/left-arrow.png"))); // NOI18N
 
@@ -382,7 +379,7 @@ public class DashboardScreen extends javax.swing.JFrame {
         txtAddUser.setFont(new java.awt.Font("Inter", 1, 20)); // NOI18N
         txtAddUser.setForeground(new java.awt.Color(51, 51, 51));
         txtAddUser.setIcon(new javax.swing.ImageIcon(getClass().getClassLoader().getResource("br/com/securekeys/icons/sign-up (1).png"))); // NOI18N
-        txtAddUser.setText("Add usuário");
+        txtAddUser.setText("Adicionar usuário");
         txtAddUser.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         javax.swing.GroupLayout itemAddUserLayout = new javax.swing.GroupLayout(itemAddUser);
@@ -489,7 +486,7 @@ public class DashboardScreen extends javax.swing.JFrame {
         txtAddSala.setFont(new java.awt.Font("Inter", 1, 20)); // NOI18N
         txtAddSala.setForeground(new java.awt.Color(51, 51, 51));
         txtAddSala.setIcon(new javax.swing.ImageIcon(getClass().getClassLoader().getResource("br/com/securekeys/icons/door (1).png"))); // NOI18N
-        txtAddSala.setText("Add sala");
+        txtAddSala.setText("Adicionar sala");
         txtAddSala.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         javax.swing.GroupLayout itemAddSalaLayout = new javax.swing.GroupLayout(itemAddSala);
@@ -1069,7 +1066,6 @@ public class DashboardScreen extends javax.swing.JFrame {
 
         //Se o usuário selecionar a opção "Sim", a aplicação irá fechar a tela de dashboard e voltar para a tela de login
         if(opcao == 0){
-            LogsDAO logsDAO = new LogsDAO();
             logsDAO.saveLogout(logDoUsuario);
 
             this.dispose();
@@ -1206,8 +1202,8 @@ public class DashboardScreen extends javax.swing.JFrame {
     private javax.swing.JLabel txtUsuarios;
     private javax.swing.JLabel txtVisualizarSala;
     private javax.swing.JLabel txtVisualizarUsers;
-
-    private Logs logDoUsuario;
+    private LogsDAO logsDAO = new LogsDAO();
+    private Logs logDoUsuario = logsDAO.getUltimoLogado();
 
     // End of variables declaration//GEN-END:variables
 }

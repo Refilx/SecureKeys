@@ -18,7 +18,7 @@ public class UsuarioDAO {
      */
     public void save(Usuario usuario){
 
-        String sql = "INSERT INTO usuario(username, password, role, dtRegistro) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO usuario(username, password, role, dtRegistro, idPessoa) VALUES (?, ?, ?, ?, ?)";
 
         Connection conn = null;
 
@@ -42,6 +42,7 @@ public class UsuarioDAO {
             pstm.setString(2, senhaCriptografada);
             pstm.setString(3, usuario.getRole());
             pstm.setDate(4, new Date(usuario.getDtRegistro().getTime()));
+            pstm.setInt(5, usuario.getIdPessoa());
 
             //Executa a Query
             pstm.execute();
@@ -96,6 +97,9 @@ public class UsuarioDAO {
 
                 //Recupera o idUser do usuário no banco de dados
                 usuario.setIdUser(rset.getInt("idUser"));
+
+                //Recupera o idPessoa do usuário no banco de dados
+                usuario.setIdPessoa(rset.getInt("idPessoa"));
 
                 //Recupera o username do usuário no banco de dados
                 usuario.setUsername(rset.getString("username"));

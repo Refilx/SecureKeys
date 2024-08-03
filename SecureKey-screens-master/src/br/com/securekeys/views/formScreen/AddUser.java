@@ -7,7 +7,9 @@ import br.com.securekeys.model.Pessoa;
 import br.com.securekeys.model.Usuario;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class AddUser{
 
@@ -32,14 +34,14 @@ public class AddUser{
         //Verificamos se todos os campos foram devidamente preenchidos para continuar
         if(
                 !nome.isBlank() &&
-//                        !cpf.isBlank() &&
-//                        !email.isBlank() &&
-//                        !telefone.isBlank() &&
-//                        !empresa.isBlank() &&
-//                        !cargo.isBlank() &&
-//                        !endereco.isBlank() &&
-//                        !cidade.isBlank() &&
-//                        !cep.isBlank() &&
+                        !cpf.isBlank() &&
+                        !email.isBlank() &&
+                        !telefone.isBlank() &&
+                        !empresa.isBlank() &&
+                        !cargo.isBlank() &&
+                        !endereco.isBlank() &&
+                        !cidade.isBlank() &&
+                        !cep.isBlank() &&
                         !username.isBlank() &&
                         !role.equals("Selecione o nível de acesso...") &&
                         !pass.isBlank()
@@ -57,12 +59,17 @@ public class AddUser{
                     //
                     PessoaDAO pessoaDAO = new PessoaDAO();
 
+                    List<Usuario> usuarioList = new ArrayList<>();
+
+                    usuarioList = usuarioDAO.getUsuario();
+
                     //
                     Usuario usuario = new Usuario();
                     usuario.setUsername(username);
                     usuario.setPassword(pass);
                     usuario.setRole(role);
                     usuario.setDtRegistro(new Date());
+                    usuario.setIdPessoa(usuarioList.getLast().getIdUser()+1);
 
                     //
                     Pessoa pessoa = new Pessoa();

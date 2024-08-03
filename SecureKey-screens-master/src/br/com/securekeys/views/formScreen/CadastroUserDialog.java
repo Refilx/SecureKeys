@@ -329,7 +329,7 @@ public class CadastroUserDialog extends javax.swing.JDialog {
 
         placeHolderUsername.setFont(new java.awt.Font("SansSerif", 0, 24)); // NOI18N
         placeHolderUsername.setForeground(new java.awt.Color(153, 153, 153));
-        placeHolderUsername.setText("Username... Ex: fulano.silva");
+        placeHolderUsername.setText("Username... Ex: nome.sobrenome");
         placeHolderUsername.setEnabled(false);
         placeHolderUsername.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -496,7 +496,7 @@ public class CadastroUserDialog extends javax.swing.JDialog {
 
     private void jCpfFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jCpfFieldKeyReleased
         // TODO add your handling code here:
-        if(jCpfField.getText().isEmpty()) {
+        if(jCpfField.getText().trim().isEmpty()) {
             placeHolderCPF.setVisible(true);
             placeHolderCPF.setEnabled(false);
         } else {
@@ -638,20 +638,20 @@ public class CadastroUserDialog extends javax.swing.JDialog {
 
         boolean resultado = new AddUser(nome, cpf, email, telefone, empresa, cargo, endereco, cidade, cep, username, role, pass).cadastroResult();
 
-        // Resetando os campos após o cadastro]
+        // Resetando os campos após o cadastro
         // verificar se não é melhor chamar os PlaceHolders de cada um
         if(resultado){
-            jNomeField.setText(null);
-            jCpfField.setText(null);
-            jEmailField.setText(null);
-            jTelefoneField.setText(null);
-            jEmpresaField.setText(null);
-            jCargoField.setText(null);
-            jEnderecoField.setText(null);
-            jCidadeField.setText(null);
-            jCepField.setText(null);
-            jUsernameField.setText(null);
-            jPasswordField.setText(null);
+            jNomeField.setText(placeHolderNome.getText());
+            jCpfField.setText(placeHolderCPF.getText());
+            jEmailField.setText(placeHolderEmail.getText());
+            jTelefoneField.setText(placeHolderTelefone.getText());
+            jEmpresaField.setText(placeHolderEmpresa.getText());
+            jCargoField.setText(placeHolderCargo.getText());
+            jEnderecoField.setText(placeHolderEndereco.getText());
+            jCidadeField.setText(placeHolderCidade.getText());
+            jCepField.setText(placeHolderCEP.getText());
+            jUsernameField.setText(placeHolderUsername.getText());
+            jPasswordField.setText(placeHolderPassword.getText());
             jNivelAcesso.setSelectedIndex(0);
         }
 
